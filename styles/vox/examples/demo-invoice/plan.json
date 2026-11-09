@@ -1,0 +1,253 @@
+{
+ "source": "work/input.mp4",
+ "output": "out/final.mp4",
+ "fps": 30,
+ "end_card": 2.6,
+ "cut": {
+  "pad": 0.09,
+  "max_gap": 0.28
+ },
+ "music": {
+  "volume": 0.75
+ },
+ "punch": {
+  "21.95": 1.3,
+  "30.53": 1.22,
+  "49.55": 1.0,
+  "58.35": 1.16
+ },
+ "cutouts": {
+  "shock": 9.9,
+  "ask": 29.0,
+  "finger": 47.2,
+  "smile": 56.9,
+  "skeptic": 25.0
+ },
+ "scenes": [
+  {
+   "name": "invoiceStamp",
+   "from": 2.63,
+   "to": 6.95,
+   "alpha": true,
+   "cues": {
+    "thing": 3.02,
+    "wrong": 6.02
+   }
+  },
+  {
+   "name": "calendar",
+   "from": 7.31,
+   "to": 11.09,
+   "alpha": false,
+   "cues": {
+    "months": 8.94
+   }
+  },
+  {
+   "name": "sentNote",
+   "from": 13.25,
+   "to": 16.95,
+   "alpha": true,
+   "cues": {
+    "sent": 13.9,
+    "forget": 16.2
+   }
+  },
+  {
+   "name": "noSystem",
+   "from": 17.16,
+   "to": 21.0,
+   "alpha": false,
+   "cues": {
+    "no": 18.36,
+    "clients": 19.48,
+    "forget": 20.1
+   }
+  },
+  {
+   "name": "seen",
+   "from": 22.0,
+   "to": 24.05,
+   "alpha": true,
+   "cues": {
+    "dodge": 23.24
+   }
+  },
+  {
+   "name": "chat",
+   "from": 26.3,
+   "to": 30.17,
+   "alpha": false,
+   "cues": {
+    "message": 26.46,
+    "bhaiya": 28.12,
+    "asked": 29.8
+   }
+  },
+  {
+   "name": "demoIntro",
+   "from": 33.59,
+   "to": 34.51,
+   "alpha": false,
+   "cues": {}
+  },
+  {
+   "name": "needs",
+   "from": 35.01,
+   "to": 43.85,
+   "alpha": false,
+   "cues": {
+    "which": 36.74,
+    "days": 38.06,
+    "howmuch": 41.3,
+    "since": 42.7
+   }
+  },
+  {
+   "name": "strike",
+   "from": 44.15,
+   "to": 46.09,
+   "alpha": false,
+   "cues": {
+    "over": 45.48
+   }
+  },
+  {
+   "name": "remind",
+   "from": 46.83,
+   "to": 49.0,
+   "alpha": false,
+   "cues": {
+    "click": 47.16,
+    "reminder": 47.76
+   }
+  },
+  {
+   "name": "noAwkward",
+   "from": 49.55,
+   "to": 51.43,
+   "alpha": true,
+   "cues": {
+    "awk": 50.42
+   }
+  },
+  {
+   "name": "paid",
+   "from": 55.33,
+   "to": 57.65,
+   "alpha": true,
+   "cues": {
+    "easy": 57.18
+   }
+  }
+ ],
+ "end_scene": "endCard",
+ "sfx": [
+  {
+   "k": "whoosh2",
+   "out": 0.0,
+   "v": 0.45
+  },
+  {
+   "k": "thump",
+   "out": 0.02,
+   "v": 0.5
+  },
+  {
+   "k": "pages",
+   "t": 7.5,
+   "v": 0.4
+  },
+  {
+   "k": "tick",
+   "t": 8.3,
+   "v": 0.3
+  },
+  {
+   "k": "whoosh",
+   "t": 13.25,
+   "v": 0.4
+  },
+  {
+   "k": "whoosh",
+   "t": 17.16,
+   "v": 0.45
+  },
+  {
+   "k": "whoosh",
+   "t": 20.15,
+   "v": 0.35
+  },
+  {
+   "k": "scratch",
+   "t": 21.98,
+   "v": 0.55
+  },
+  {
+   "k": "whoosh",
+   "t": 26.3,
+   "v": 0.45
+  },
+  {
+   "k": "tear",
+   "t": 33.55,
+   "v": 0.6
+  },
+  {
+   "k": "thump",
+   "t": 33.62,
+   "v": 0.8
+  },
+  {
+   "k": "shutter",
+   "t": 33.7,
+   "v": 0.5
+  },
+  {
+   "k": "whoosh",
+   "t": 35.01,
+   "v": 0.4
+  },
+  {
+   "k": "whoosh2",
+   "t": 36.5,
+   "v": 0.3
+  },
+  {
+   "k": "whoosh2",
+   "t": 41.05,
+   "v": 0.3
+  },
+  {
+   "k": "whoosh2",
+   "t": 42.4,
+   "v": 0.3
+  },
+  {
+   "k": "whoosh",
+   "t": 44.15,
+   "v": 0.4
+  },
+  {
+   "k": "whoosh",
+   "t": 46.83,
+   "v": 0.35
+  },
+  {
+   "k": "whoosh",
+   "t": 55.33,
+   "v": 0.45
+  },
+  {
+   "k": "whoosh2",
+   "at": "end",
+   "v": 0.55
+  },
+  {
+   "k": "thump",
+   "at": "end",
+   "plus": 0.05,
+   "v": 0.8
+  }
+ ]
+}

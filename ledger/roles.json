@@ -1,0 +1,69 @@
+{
+ "researcher": {
+  "phase": "develop",
+  "artifact": "research.md",
+  "kind": "builtin"
+ },
+ "scriptwriter": {
+  "phase": "develop",
+  "artifact": "script.md",
+  "kind": "builtin"
+ },
+ "art-director": {
+  "phase": "develop",
+  "artifact": "look.md",
+  "kind": "builtin"
+ },
+ "storyboarder": {
+  "phase": "develop",
+  "artifact": "shotlist.md",
+  "kind": "builtin"
+ },
+ "asset-wrangler": {
+  "phase": "prep",
+  "artifact": "assets.md",
+  "kind": "builtin"
+ },
+ "sound-designer": {
+  "phase": "prep",
+  "artifact": "sound.md",
+  "kind": "builtin"
+ },
+ "cinematographer": {
+  "phase": "build",
+  "artifact": "camera.md",
+  "kind": "builtin"
+ },
+ "editor": {
+  "phase": "build",
+  "artifact": "edit-log.md",
+  "kind": "builtin"
+ },
+ "qc-picture": {
+  "phase": "qc",
+  "artifact": "review-picture.md",
+  "kind": "builtin"
+ },
+ "qc-audio": {
+  "phase": "qc",
+  "artifact": "review-audio.md",
+  "kind": "builtin"
+ },
+ "toolsmith": {
+  "phase": "post",
+  "artifact": "postmortem.md",
+  "kind": "builtin"
+ },
+ "observer": {
+  "phase": "meta",
+  "artifact": "strategy.md",
+  "kind": "builtin",
+  "why": "understands the goal; adapts the workflow; reviews the whole system"
+ },
+ "capability-scout": {
+  "phase": "meta",
+  "artifact": "capabilities.md",
+  "kind": "builtin",
+  "why": "finds and vets skills, plugins and connectors that close a gap"
+ }
+}

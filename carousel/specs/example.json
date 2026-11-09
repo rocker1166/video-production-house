@@ -1,0 +1,54 @@
+{
+ "slug": "example",
+ "style": "illustrated",
+ "slides": [
+  {
+   "key": "realistic",
+   "style": "realistic",
+   "kick": "realistic photo",
+   "h": "One <em>idea</em> per slide.",
+   "scene": "A small group seen from behind walking toward a distant ridge, calm open space in the top third, blank paper signs"
+  },
+  {
+   "key": "watercolour",
+   "style": "watercolour",
+   "kick": "watercolour journal",
+   "h": "One <em>idea</em> per slide.",
+   "seeds": [
+    "a"
+   ],
+   "scene": "A small group seen from behind walking toward a distant ridge, calm open space in the top third, blank paper signs"
+  },
+  {
+   "key": "retro",
+   "style": "retro",
+   "kick": "vintage poster",
+   "h": "One <em>idea</em> per slide.",
+   "seeds": [
+    "a"
+   ],
+   "scene": "A small group seen from behind walking toward a distant ridge, calm open space in the top third, blank paper signs"
+  },
+  {
+   "key": "collage",
+   "style": "collage",
+   "kick": "paper collage",
+   "h": "One <em>idea</em> per slide.",
+   "seeds": [
+    "a"
+   ],
+   "scene": "A small group seen from behind walking toward a distant ridge, calm open space in the top third, blank paper signs"
+  },
+  {
+   "key": "clay",
+   "style": "clay",
+   "kick": "3d clay",
+   "h": "One <em>idea</em> per slide.",
+   "seeds": [
+    "a"
+   ],
+   "scene": "A small group seen from behind walking toward a distant ridge, calm open space in the top third, blank paper signs"
+  }
+ ],
+ "subject": "a calm mountain village at dawn"
+}

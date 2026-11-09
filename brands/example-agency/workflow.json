@@ -1,0 +1,10 @@
+{
+  "content_types": {
+    "reach-hook": { "funnel": "awareness", "purpose": "get sent to other owners: a sharp, relatable pain in 2 seconds", "crew": "standard", "metrics": ["sends per 1k views", "3-second hold", "completion"], "notes": "pain-first hook, one open loop, payoff on the last second; no offer" },
+    "story-proof": { "funnel": "consideration", "purpose": "build trust with a real before/after and what changed for the client", "crew": "full", "metrics": ["saves per 1k", "shares", "profile visits", "avg watch time"], "notes": "needs real proof and written client permission; compliance check on claims" },
+    "authority-explainer": { "funnel": "consideration", "purpose": "show how you think: a mistake, a method, a teardown of a site", "crew": "standard", "metrics": ["saves per 1k", "completion"], "notes": "carousel or vox explainer; one idea per slide" },
+    "offer-cta": { "funnel": "conversion", "purpose": "make the next step obvious for people already warm", "crew": "researcher,scriptwriter,editor,qc-picture", "metrics": ["DMs", "leads", "link clicks"], "notes": "at most 1 in 10 posts; no prices; the user posts it" },
+    "conversation": { "funnel": "engagement", "purpose": "start two-way replies: a question, a poll, a hot take", "crew": "solo", "metrics": ["comments", "replies", "DMs"], "notes": "cheap to make; reply within the first hour" }
+  },
+  "mix": { "awareness": 0.5, "consideration": 0.35, "conversion": 0.1, "engagement": 0.05 }
+}

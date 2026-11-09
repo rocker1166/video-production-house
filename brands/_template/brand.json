@@ -1,0 +1,19 @@
+{
+  "name": "yourbrand",
+  "product": "one line: what it does, for whom",
+  "niche": "e.g. travel | saas | fitness | food | ecommerce | education | finance",
+  "language": { "captions": "English", "voice": "en-US-GuyNeural", "script": "Latin", "notes": "tone, slang, never-say list" },
+  "colors": { "ink": "#111827", "accent": "#DC5426", "accent-light": "#FF9A6C", "cream": "#F7F4EC", "paper": "#F6E3BF", "teal": "#127C7A" },
+  "fonts": { "title": "Cormorant Garamond", "mood": "Kalam", "sans": "Poppins", "pain": "Lora" },
+  "mark": "<svg ...> or empty: carousel wordmark uses name",
+  "reels": {
+    "subject_label": "place | product | scene | exercise | dish",
+    "libraries": ["subject-a", "subject-b", "city"],
+    "clip_sources": ["own footage (best)", "Pexels", "Mixkit"],
+    "music_policy": "licensed | royalty-free | trending-audio-posted-from-platform",
+    "caption_zone_px": 420
+  },
+  "carousel": { "variant": "illustrated", "image_budget_usd": 2, "end_cta": "Follow {name}" },
+  "claims": { "never": ["prices", "booking links", "unverified numbers"], "must": ["paid-partnership label when sponsored"] },
+  "posting": "never auto-post; the owner posts"
+}

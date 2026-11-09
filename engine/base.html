@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="vendor/fonts.css" rel="stylesheet">
+<script src="vendor/gsap.min.js"></script>
+<style>
+  /* Locked system (vox-skill visual-system.md): one paper, four inks. */
+  :root {
+    --paper: #DAD9D5; --ink: #1A1A1A; --deep: #16110D; --red: #E04329; --hl: #F5C518;
+    --shadow: rgba(55,45,31,.28); --card: #F3F1EA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+  body { font-family: Inter, sans-serif; color: var(--ink); }
+  #stage { position: absolute; inset: 0; overflow: hidden; }
+  .abs { position: absolute; }
+  .paper { position: absolute; inset: 0; z-index: 0; background-color: var(--paper);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .30  0 0 0 0 .26  0 0 0 0 .20  0 0 0 .28 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1080' height='1920'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.004 .006' numOctaves='3' seed='7'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .35  0 0 0 0 .28  0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>"); }
+  .wash { position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: soft-light;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(63,54,42,.12)), radial-gradient(circle at 50% 42%, rgba(255,255,255,.22), transparent 42%); }
+  .vig { position: absolute; inset: 0; z-index: 30; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(40,30,15,.28) 100%); }
+  .head { font-family: "Arial Black", "Arial", sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -2px; line-height: .95; color: var(--ink); }
+  .meta { font-family: Montserrat, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: #4A463F; }
+  .type { font-family: "Special Elite", monospace; }
+  .serif { font-family: "Playfair Display", serif; font-weight: 900; }
+  .pt { font-family: "PT Serif", serif; }
+  .hand { font-family: Caveat, cursive; font-weight: 700; }
+  .hi { font-family: "Noto Sans Devanagari", Inter, sans-serif; }
+  .shadow { filter: drop-shadow(0 28px 26px var(--shadow)); }
+  .hl { position: relative; display: inline-block; z-index: 0; white-space: nowrap; }
+  .hl > .bar { position: absolute; left: -10px; right: -10px; top: 46%; bottom: 2%; background: var(--hl); z-index: -1;
+    transform-origin: left center; transform: scaleX(0); border-radius: 4px 10px 6px 12px; mix-blend-mode: multiply; }
+  .doc { background: var(--card); box-shadow: 0 28px 26px var(--shadow); }
+  .stamp { position: absolute; padding: 8px 26px; border: 9px solid currentColor; border-radius: 14px; white-space: nowrap;
+    font-family: "Arial Black", sans-serif; font-weight: 900; letter-spacing: .04em; line-height: 1; opacity: 0;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.25'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply; }
+  /* torn foreground band: occludes the subject's lower body, sits above the bottom dead zone */
+  .fg { position: absolute; left: -20px; right: -20px; z-index: 24; background: #C4BBA8;
+    box-shadow: 0 -18px 30px rgba(55,45,31,.22);
+    clip-path: polygon(0 18px, 4% 6px, 9% 20px, 15% 4px, 22% 16px, 28% 2px, 35% 18px, 41% 8px, 48% 22px, 55% 4px, 61% 15px, 68% 3px, 74% 19px, 81% 7px, 87% 20px, 93% 5px, 100% 16px, 100% 100%, 0 100%); }
+  .fg::after { content: ""; position: absolute; inset: 0; opacity: .5; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .3  0 0 0 0 .22  0 0 0 .4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  /* demo product (real UI, dark) shown as a screen dropped onto the paper */
+  .screen { background: #0D0E10; border-radius: 34px; box-shadow: 0 40px 50px rgba(55,45,31,.38); overflow: hidden; }
+  .ds-row { display: flex; align-items: center; gap: 22px; padding: 22px 24px; border-radius: 22px; position: relative; }
+  .ds-av { width: 66px; height: 66px; border-radius: 18px; display: grid; place-items: center; font: 700 24px Inter; color: #EDEAF5; background: #24222C; flex: none; }
+  .btn-grad { background: linear-gradient(135deg, #D0BCFF, #A078FF); color: #140F22; font: 700 30px Inter; border-radius: 20px; padding: 20px 30px; }
+  .bubble { position: absolute; background: #DCF3C8; border-radius: 26px 26px 6px 26px; padding: 18px 24px 12px; font-size: 35px; line-height: 1.3; box-shadow: 0 2px 2px rgba(0,0,0,.08); }
+  .bubble .m { font: 500 19px Inter; color: #667; text-align: right; margin-top: 4px; }
+  .tick { color: #3A9BDC; font-weight: 700; }
+  .cursor { width: 60px; height: 60px; position: absolute; z-index: 50; filter: drop-shadow(0 6px 10px rgba(0,0,0,.45)); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+const stage = document.getElementById('stage');
+let tl;
+// Foley cues the build script mixes in, logged where the motion happens so sound never drifts off picture.
+let SFX = [];
+const cue = (kind, at) => SFX.push({ kind, t: +Math.max(0, at).toFixed(3) });
+
+function el(html, parent = stage) {
+  const t = document.createElement('template'); t.innerHTML = html.trim();
+  const n = t.content.firstElementChild; parent.appendChild(n); return n;
+}
+const $ = (s, root = stage) => root.querySelector(s);
+const $$ = (s, root = stage) => [...root.querySelectorAll(s)];
+
+// ---- shared vocabulary ----
+function paper(vig = false) { el('<div class="paper"></div>'); el('<div class="wash"></div>'); if (vig) el('<div class="vig"></div>'); }
+
+// Elements arrive, they do not fade: critically-damped rise (spring d18 m.75 k110 ≈ ζ 0.99) + 16f opacity ramp.
+function rise(node, at, dist = 390, sound = 'slide') {
+  if (sound) cue(node.classList && node.classList.contains('type') ? 'typewriter' : sound, at);
+  tl.fromTo(node, { y: dist }, { y: 0, duration: .75, ease: 'expo.out', immediateRender: true }, at);
+  tl.fromTo(node, { opacity: 0 }, { opacity: 1, duration: .53, ease: 'power3.out', immediateRender: true }, at);
+}
+function hl(bar, at, dur = .38) { cue('pen', at); tl.to(bar, { scaleX: 1, duration: dur, ease: 'power2.out' }, at); }
+function slam(node, at, target) {
+  cue('stamp', at + .13);
+  tl.fromTo(node, { scale: 2.3, opacity: 0 }, { scale: 1, opacity: .93, duration: .15, ease: 'power4.in' }, at);
+  if (target) tl.to(target, { keyframes: [{ x: -9 }, { x: 7 }, { x: -3 }, { x: 0 }], duration: .22 }, at + .15);
+}
+function stamp(parent, text, color, { x, y, rot = -12, size = 84 }) {
+  return el(`<div class="stamp" style="left:${x}px;top:${y}px;color:${color};font-size:${size}px;transform:rotate(${rot}deg)">${text}</div>`, parent);
+}
+function stroke(d, { color = 'var(--red)', width = 16, z = 22 } = {}) {
+  const svg = el(`<svg class="abs" style="inset:0;z-index:${z}" viewBox="0 0 1080 1920" fill="none"><path d="${d}" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
+  const p = svg.querySelector('path'); const L = p.getTotalLength();
+  p.style.strokeDasharray = L; p.style.strokeDashoffset = L; return p;
+}
+const draw = (p, at, dur = .3) => (cue('marker', at), tl.to(p, { strokeDashoffset: 0, duration: dur, ease: 'power1.inOut' }, at));
+
+// Cut-out subject with the offset red marker silhouette behind it (signature move).
+function subject(src, { x, y, w, side = 1, z = 12 }) {
+  const h = w * 1.5;
+  return el(`<div class="abs" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;z-index:${z}">
+    <div class="abs" style="inset:0;transform:translate(${26 * side}px,8px);background:var(--red);
+      -webkit-mask-image:url(${src});-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat"></div>
+    <img class="abs shadow" src="${src}" style="inset:0;width:100%;height:100%"></div>`);
+}
+function fg(top, at) {
+  const n = el(`<div class="fg" style="top:${top}px;bottom:-40px">
+    <div class="abs" style="inset:0;background:repeating-linear-gradient(180deg, transparent 0 63px, rgba(70,90,110,.20) 63px 65px);background-position:0 40px"></div>
+    <div class="abs" style="left:120px;top:0;bottom:0;width:3px;background:rgba(224,67,41,.35)"></div>
+    <div class="abs hand" style="left:150px;top:${170}px;right:150px;font-size:44px;line-height:65px;color:rgba(22,17,13,.24)">
+      ${(window.LEDGER || []).map(([d, n, a]) => `<div style="display:flex;gap:30px"><span style="width:130px">${d}</span><span style="flex:1">${n}</span><span>₹${a}</span><span style="width:120px;text-align:right">due</span></div>`).join('')}</div>
+    <div class="abs" style="right:70px;top:${120}px;width:170px;height:170px;border-radius:50%;box-shadow:inset 0 0 0 10px rgba(120,80,40,.10), inset 0 0 0 16px rgba(120,80,40,.05)"></div>
+    <div class="abs" style="left:56px;top:-34px;width:34px;height:120px;border:6px solid #8E8A84;border-radius:20px;transform:rotate(-8deg);box-shadow:0 6px 8px rgba(55,45,31,.25)"></div>
+  </div>`);
+  rise(n, at, 260, 'rustle'); return n;
+}
+
+// Yellow marker box round an element inside the screen (the paper's highlighter crossing into the product).
+// Measured in untransformed layout space, so call before any camera move is applied.
+function ring(target, at, { pad = 10, round = 14 } = {}) {
+  const host = target.offsetParent;
+  const b = el(`<div class="abs" style="left:${target.offsetLeft - pad}px;top:${target.offsetTop - pad / 2}px;width:${target.offsetWidth + pad * 2}px;height:${target.offsetHeight + pad}px;border:5px solid var(--hl);border-radius:${round}px;opacity:0"></div>`, host);
+  cue('pen', at);
+  tl.fromTo(b, { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1, duration: .16, ease: 'back.out(3)' }, at);
+  return b;
+}
+
+// Scenes register themselves from the project's scenes.js: Object.assign(SCENES, { name(cues, props) {...} }).
+const SCENES = {};
+
+window.setup = (name, cues, props = {}) => {
+  stage.innerHTML = '';
+  SFX = [];
+  if (typeof PLATE === 'object') { PLATE.dir = null; PLATE.layers = []; PLATE.frame = -1; }
+  gsap.set(stage, { clearProps: 'all' });
+  tl = gsap.timeline({ paused: true });
+  if (!SCENES[name]) throw new Error('unknown scene ' + name);
+  SCENES[name](cues, props);
+  // Never a still frame: a held graphic reads as a frozen video on a phone, so drift the camera
+  // through every scene that doesn't already move the stage itself.
+  if (!tl.getTweensOf(stage).length) tl.fromTo(stage, { scale: 1 }, { scale: 1.045, duration: cues.end, ease: 'none', transformOrigin: '50% 45%' }, 0);
+  tl.set({}, {}, cues.end);
+  tl.seek(0);
+};
+window.sfx = () => SFX;
+// Async so plate scenes can load that frame's video + matte; resolves to nothing (Playwright serialises return values).
+window.seek = async (t) => { tl.seek(t, false); if (typeof drawPlate === 'function') await drawPlate(Math.round(t * 30)); };
+</script>
+</body>
+</html>

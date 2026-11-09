@@ -1,0 +1,47 @@
+{
+ "metricool": {
+  "kind": "mcp",
+  "source": "https://ai.metricool.com/mcp (MCP registry)",
+  "gap": "audience metrics for the metrics loop, best-time-to-post, scheduling posts as drafts",
+  "status": "proposed",
+  "risk": "unvetted",
+  "vet": [],
+  "added": "2026-11-09"
+ },
+ "vidiq": {
+  "kind": "mcp",
+  "source": "https://mcp.vidiq.com/mcp (MCP registry)",
+  "gap": "trend and outlier research for the researcher: trending videos, keyword research, similar thumbnails (YouTube, Instagram, TikTok)",
+  "status": "proposed",
+  "risk": "unvetted",
+  "vet": [],
+  "added": "2026-11-09"
+ },
+ "elevenlabs-mcp": {
+  "kind": "mcp",
+  "source": "https://api.elevenlabs.io/v1/mcp-claude-marketplace (MCP registry)",
+  "gap": "voiceover and sound generation from inside Claude instead of curl scripts",
+  "status": "proposed",
+  "risk": "unvetted",
+  "vet": [],
+  "added": "2026-11-09"
+ },
+ "supermetrics": {
+  "kind": "mcp",
+  "source": "https://mcp.supermetrics.com/mcp (MCP registry; also a plugin with 42 workflows)",
+  "gap": "cross-platform analytics (Instagram, LinkedIn, TikTok, GA4) for the observer; can also schedule social posts",
+  "status": "proposed",
+  "risk": "unvetted",
+  "vet": [],
+  "added": "2026-11-09"
+ },
+ "analytics-skills": {
+  "kind": "plugin",
+  "source": "Anthropic Directory community plugin (Clamp)",
+  "gap": "teaches the observer to read funnels, diagnose traffic changes and avoid causal mistakes",
+  "status": "proposed",
+  "risk": "unvetted",
+  "vet": [],
+  "added": "2026-11-09"
+ }
+}

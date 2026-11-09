@@ -1,0 +1,12 @@
+{
+  "name": "northwind-studio",
+  "product": "a small agency that builds websites and brand systems for local service businesses",
+  "niche": "agency",
+  "language": { "captions": "plain English, no jargon", "voice": "en-US-GuyNeural", "script": "Latin", "notes": "founder voice: direct, specific, shows the work" },
+  "colors": { "ink": "#111827", "accent": "#E4572E", "accent-light": "#FF9A6C", "cream": "#F7F4EC", "paper": "#F2EFE8", "teal": "#127C7A" },
+  "fonts": { "title": "Instrument Serif", "mood": "Kalam", "sans": "Poppins", "pain": "Lora" },
+  "reels": { "subject_label": "project", "libraries": ["screens", "founder", "process"], "clip_sources": ["own screen recordings", "own footage"], "music_policy": "royalty-free or platform audio, never baked in", "caption_zone_px": 420 },
+  "carousel": { "variant": "illustrated", "image_budget_usd": 2, "end_cta": "Follow {name}" },
+  "claims": { "never": ["guaranteed results or revenue numbers", "client names without written permission", "prices"], "must": ["real before/after only"] },
+  "posting": "never auto-post; the owner posts"
+}

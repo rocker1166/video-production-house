@@ -1,0 +1,3 @@
+# only needed on Linux/Windows(WSL), or macOS without Xcode: person cut-outs and mattes
+rembg
+onnxruntime

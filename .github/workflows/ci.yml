@@ -1,0 +1,36 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  smoke:
+    strategy: { matrix: { os: [ubuntu-latest, macos-latest] } }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: tools
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg aubio-tools fonts-noto; else brew install ffmpeg aubio; fi
+      - name: syntax and self-test
+        run: |
+          python3 -m py_compile engine/*.py reels/bin/*.py ledger/house.py hooks/hook.py
+          for f in engine/*.cjs reels/bin/*.cjs carousel/*.mjs; do node --check "$f"; done
+          bash -n engine/doctor.sh && bash -n install.sh
+          python3 ledger/house.py selftest
+          python3 ledger/job.py selftest
+          python3 ledger/cap.py selftest
+          python3 - <<'PY'
+          import glob,re
+          for f in glob.glob('.claude/agents/*.md'):
+              h=open(f).read().split('---')[1]
+              assert all(k in h for k in ('name:','description:','tools:','model:')),f
+          print('agents ok')
+          PY
+      - name: carousel render smoke test (real browser, any OS)
+        run: |
+          mkdir -p /tmp/h && export CAROUSEL_HOME=/tmp/h && mkdir -p /tmp/h/specs /tmp/h/art/t
+          ffmpeg -loglevel error -y -f lavfi -i color=c=0xE8C99B:s=1080x1350 -frames:v 1 /tmp/h/art/t/a-a.png
+          echo '{"slug":"t","style":"illustrated","brand":{"name":"acme"},"slides":[{"key":"a","h":"One <em>idea</em>","tone":"light"}]}' > /tmp/h/specs/t.json
+          node carousel/kc.mjs render t && test -s /tmp/h/out/t/slide-01.png

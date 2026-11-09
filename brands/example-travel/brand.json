@@ -1,0 +1,18 @@
+{
+  "name": "wanderly",
+  "product": "an app where creators host group trips and travellers book a seat",
+  "niche": "travel",
+  "language": { "captions": "English with local slang", "voice": "en-US-GuyNeural", "script": "Latin", "notes": "relatable to a 9-to-5 life; short; no emoji walls" },
+  "colors": { "ink": "#0B4F57", "accent": "#DC5426", "accent-light": "#FF9A6C", "cream": "#F7F4EC", "paper": "#F6E3BF", "teal": "#127C7A" },
+  "fonts": { "title": "Cormorant Garamond", "mood": "Kalam", "sans": "Poppins", "pain": "Lora" },
+  "reels": {
+    "subject_label": "place",
+    "libraries": ["mountains", "coast", "city", "journey"],
+    "clip_sources": ["own trip footage", "Pexels", "Mixkit"],
+    "music_policy": "trending audio posted from the platform, never baked in",
+    "caption_zone_px": 420
+  },
+  "carousel": { "variant": "illustrated", "image_budget_usd": 2, "end_cta": "Follow {name}" },
+  "claims": { "never": ["prices", "book-now links", "real traveller names on app screens"], "must": ["paid-partnership label on creator trips"] },
+  "posting": "never auto-post; the owner posts"
+}

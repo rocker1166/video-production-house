@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Geist;font-weight:400;src:url("fonts/Geist_400Regular.ttf")}
+@font-face{font-family:Geist;font-weight:500;src:url("fonts/Geist_500Medium.ttf")}
+@font-face{font-family:Geist;font-weight:600;src:url("fonts/Geist_600SemiBold.ttf")}
+@font-face{font-family:GM;src:url("fonts/GeistMono-Regular.ttf")}
+@font-face{font-family:Hand;src:url("fonts/NothingYouCouldDo-Regular.ttf")}
+@font-face{font-family:Gloock;src:url("fonts/Gloock-Regular.ttf")}
+@font-face{font-family:InstrumentSerif;font-style:normal;src:url("fonts/InstrumentSerif-Regular.ttf")}
+@font-face{font-family:InstrumentSerif;font-style:italic;src:url("fonts/InstrumentSerif-Italic.ttf")}
+@font-face{font-family:YoungSerif;src:url("fonts/YoungSerif-Regular.ttf")}
+@font-face{font-family:BigShoulders;font-weight:700;src:url("fonts/BigShoulders-Bold.ttf")}
+@font-face{font-family:Outfit;font-weight:700;src:url("fonts/Outfit-Bold.ttf")}
+/* brand colours arrive from brand.json via the spec hash; these are neutral defaults */
+:root{--ink:#111827;--accent:#DC5426;--accent-light:#FF9A6C;--cream:#F7F4EC;--paper:#F6E3BF;--teal:#127C7A}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1350px;overflow:hidden;background:var(--paper)}
+.s{position:relative;width:1080px;height:1350px;overflow:hidden}
+.s>img{position:absolute;left:50%;top:50%;width:1170px;height:auto;transform:translate(-50%,-50%)}
+.scrim{position:absolute;left:0;right:0;top:0;height:520px;background:linear-gradient(180deg,rgba(5,26,30,.42),rgba(5,26,30,0))}
+.t{position:absolute;left:76px;width:930px;z-index:1}
+.k{font-size:50px;line-height:1;display:inline-block;margin-bottom:14px}
+.k.hand{font-family:Hand,cursive;transform:rotate(-2deg);transform-origin:left center}
+.k.mono{font-family:GM,monospace;font-size:24px;letter-spacing:.24em;text-transform:uppercase;margin-bottom:20px}
+.h{line-height:.98;letter-spacing:-.02em;text-wrap:balance}
+.h.upper{text-transform:uppercase;line-height:.92;letter-spacing:0}
+.h em{font-style:normal}.h.it em{font-style:italic}
+.light{color:var(--ink)}.light em,.light .k{color:var(--accent)}
+.dark{color:var(--cream)}.dark em,.dark .k{color:var(--accent-light)}
+.card{display:inline-block;max-width:800px;margin-top:22px;padding:16px 24px 18px;border-radius:24px;background:rgba(247,244,236,.92);box-shadow:0 10px 30px rgba(5,26,30,.18);color:var(--ink)}
+.lab{font-family:GM,monospace;font-size:19px;letter-spacing:.24em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+.p{font-family:Geist;font-weight:500;font-size:31px;line-height:1.26;letter-spacing:-.005em;text-wrap:balance}
+.sign{display:inline-block;margin:26px 0 0 14px;padding:14px 28px;border-radius:999px;background:var(--cream);color:var(--ink);font-family:Geist;font-weight:600;font-size:26px;letter-spacing:.16em;text-transform:uppercase}
+.pill{position:absolute;bottom:46px;height:84px;border-radius:42px;background:rgba(247,244,236,.94);display:flex;align-items:center;padding:0 32px;box-shadow:0 8px 30px rgba(5,26,30,.28);color:var(--ink);z-index:3}
+.lock{left:56px;gap:12px}.lock span{font-family:Geist;font-weight:600;font-size:38px;letter-spacing:-.045em;line-height:1}
+.pg{right:56px;font-family:GM,monospace;font-size:23px;letter-spacing:.2em;text-transform:uppercase}
+.phone{position:absolute;right:44px;top:640px;width:420px;padding:11px;border-radius:58px;background:#0E2226;transform:rotate(2.5deg);box-shadow:0 30px 70px rgba(5,26,30,.45);z-index:2}
+.phone .scr{border-radius:47px;overflow:hidden;height:760px;background:#fff}
+.phone .scr img{display:block;width:100%;height:auto}
+.phone:before{content:'';position:absolute;top:22px;left:50%;width:110px;height:30px;margin-left:-55px;border-radius:16px;background:#0E2226;z-index:3}
+</style></head><body><div id="r"></div>
+<script>
+// spec arrives in the URL hash, built by kc.mjs: {slug, slides:[{...slide, styleDef}]} and ?s=<slide number>
+const SPEC=JSON.parse(decodeURIComponent(location.hash.slice(1)));
+const n=+new URLSearchParams(location.search).get("s"),S=SPEC.slides,N=S.length,d=S[n-1],ty=d.styleDef.type;
+const img=d.img, B=SPEC.brand||{};
+for(const [k,v] of Object.entries(B.colors||{}))document.documentElement.style.setProperty("--"+k,v);
+const mark=B.mark||`<svg viewBox="0 0 100 100" width="54" height="54"><circle cx="50" cy="50" r="26" fill="currentColor"/></svg>`;
+const tone=d.tone||"light";
+document.getElementById("r").innerHTML=`<div class="s"><img src="${img}">${tone==="dark"?`<div class="scrim"></div>`:""}
+<div class="t ${tone}" style="top:${d.top||70}px"><div class="k ${ty.kicker}">${d.kick||""}</div>
+<div class="h ${ty.upper?"upper":""} ${ty.italicEm?"it":""}" id="h" style="font-family:${ty.family};font-weight:${ty.weight};font-size:${d.size||96}px">${d.h}</div>
+${d.p?`<div class="card">${d.lab?`<div class="lab">${d.lab}</div>`:""}<div class="p">${d.p}</div></div>`:""}${d.sign?`<span class="sign">${d.sign}</span>`:""}</div>
+${d.phone?`<div class="phone"><div class="scr"><img src="${d.phone.src}" style="margin-top:-${(d.phone.off||0)*0.3478}px"></div></div>`:""}
+<div class="pill lock">${mark}<span>${B.name||"yourbrand"}</span></div><div class="pill pg">${d.pg||String(n).padStart(2,"0")+" / "+String(N).padStart(2,"0")}</div></div>`;
+document.fonts.ready.then(()=>{const h=document.getElementById("h");let fs=d.size||96;const max=d.sign?290:(d.lab?210:230);while(h.scrollHeight>max&&fs>60){fs-=4;h.style.fontSize=fs+"px";}});
+</script></body></html>

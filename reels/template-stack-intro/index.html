@@ -1,0 +1,232 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="file://__HOUSE__/engine/vendor/fonts.css">
+<link rel="stylesheet" href="file://__HOUSE__/reels/bin/fonts/extra.css">
+<style>
+  @font-face{font-family:'GeistB';src:url('file://__HOUSE__/carousel/fonts/Geist_600SemiBold.ttf');font-weight:700}
+  :root{--o:#EC6330;--t:#0F6F6B}
+  html,body{margin:0;background:#111;width:1080px;height:1920px;overflow:hidden}
+  #stage{position:absolute;inset:0;width:1080px;height:1920px;overflow:hidden;isolation:isolate;
+         background:radial-gradient(ellipse at 50% 45%,#1d1d1d 0%,#121212 70%)}
+  #world{position:absolute;inset:0;transform-origin:540px 900px;will-change:transform}
+  .abs{position:absolute;left:0;top:0}
+  .card{position:absolute;left:0;top:0;overflow:hidden;opacity:0;will-change:transform}
+  .card.sh{box-shadow:0 26px 50px rgba(0,0,0,.5)}
+  .card img{display:block;width:100%;height:100%;object-fit:cover}
+  .card.face img{filter:grayscale(1) contrast(1.1)}
+  .card.sticker{overflow:visible}
+  .card.sticker img{object-fit:contain;filter:drop-shadow(0 14px 16px rgba(0,0,0,.5))}
+  .lab{position:absolute;left:12px;bottom:10px;font:700 21px/1 'GeistB',sans-serif;letter-spacing:.06em;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+  .tx{position:absolute;left:0;width:1080px;text-align:center;color:#f6f2ea;opacity:0;white-space:nowrap;z-index:250;line-height:.86}
+  .L{display:inline-block;will-change:transform}
+  .pf9{font-family:'Playfair Display',serif;font-weight:900;letter-spacing:-0.035em}
+  .pfi{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;letter-spacing:-0.02em}
+  .ebi{font-family:'EB Garamond',serif;font-style:italic;font-weight:400;letter-spacing:-0.01em}
+  .gs{font-family:'GeistB','Poppins',sans-serif;font-weight:700;letter-spacing:-0.045em}
+  #kick{top:130px;font-size:130px;z-index:260}
+  #pbg{position:absolute;inset:0;opacity:0;overflow:hidden;z-index:240}
+  #pbg img{position:absolute;left:0;top:0;width:1080px;height:1920px;object-fit:cover}
+  #pbg .shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25),rgba(0,0,0,.05) 40%,rgba(0,0,0,.45))}
+  #pn{top:780px;font-size:300px;z-index:262;text-shadow:0 6px 40px rgba(0,0,0,.55)}
+  .row{position:absolute;left:0;display:flex;gap:16px;opacity:0;z-index:230}
+  .row img{width:400px;height:520px;object-fit:cover;flex:none}
+  #chip{position:absolute;left:340px;top:1700px;width:400px;height:96px;border-radius:48px;background:var(--o);color:#fff;
+        font:700 46px/96px 'GeistB',sans-serif;text-align:center;opacity:0;z-index:270;box-shadow:0 18px 40px rgba(0,0,0,.4)}
+  #glow{position:absolute;left:140px;top:560px;width:800px;height:800px;border-radius:50%;opacity:0;z-index:225;
+        background:radial-gradient(circle,rgba(236,99,48,.55),rgba(236,99,48,0) 65%)}
+  .phone{position:absolute;opacity:0;z-index:235;border-radius:56px;box-shadow:0 40px 80px rgba(0,0,0,.6);overflow:hidden}
+  .phone img{display:block;width:100%;height:100%;object-fit:cover}
+  #dust{position:absolute;left:0;top:0;width:1080px;height:1920px;pointer-events:none;z-index:500}
+  #teal{position:absolute;inset:0;background:var(--t);opacity:0;z-index:300}
+  #flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:450}
+  #logo{position:absolute;inset:0;opacity:0;z-index:400}
+  #markbox{position:absolute;left:290px;top:610px;width:500px;height:215px}
+  #wm{position:absolute;left:90px;top:830px;width:900px;height:223px;background:url(assets/brand-logo-white.png) no-repeat;
+      background-size:1485px 459px;background-position:-405px -95px;opacity:0}
+  #hi{position:absolute;left:0;width:1080px;top:1112px;text-align:center;font:600 92px/1.2 'Noto Sans Devanagari',sans-serif;color:#fff;opacity:0}
+  #tag{position:absolute;left:0;width:1080px;top:1320px;text-align:center;font:600 54px/1.2 Poppins,sans-serif;color:rgba(255,255,255,.88);opacity:0}
+  #ring{position:absolute;left:540px;top:716px;border-radius:50%;border:4px solid #fff;opacity:0}
+</style></head><body>
+<div id="stage">
+ <div id="world">
+  <div id="cards"></div>
+  <div class="tx" id="t1" style="top:690px"><span class="pf9" style="font-size:360px;display:inline-block" id="t1s">hi!</span></div>
+  <div class="tx" id="t2" style="top:500px"><span class="pfi" style="font-size:250px" data-split>we are</span></div>
+  <div class="tx" id="t3" style="top:740px"><span class="gs" style="font-size:300px;display:inline-block" id="t3s">brand</span></div>
+  <div class="tx" id="t4" data-lint-skip style="top:760px"><span class="pf9" style="font-size:230px;display:inline-block" id="t4s">and we</span></div>
+  <div class="tx ebi" id="h1" style="top:520px;font-size:140px">plan</div>
+  <div class="tx pf9" id="h2" style="top:640px;font-size:340px">group</div>
+  <div class="tx pfi" id="h3" style="top:940px;font-size:350px;color:#EC6330">trips</div>
+  <div id="pbg"><div class="shade"></div></div>
+  <div class="tx pf9" id="pn">SPITI</div>
+  <div class="row" id="r1"></div><div class="row" id="r2"></div><div class="row" id="r3"></div>
+  <div id="chip">13 of 20 going</div>
+  <div id="glow"></div>
+  <img class="phone" id="p0" src="assets/discover-feed.png"><img class="phone" id="p1" src="assets/trip-page.png"><img class="phone" id="p2" src="assets/trip-highlights.png">
+  <div class="tx ebi" id="kick">pick a place</div>
+  <div class="tx ebi" id="tw" style="top:800px;font-size:250px">with</div>
+  <div class="tx pf9" id="ty" style="top:760px;font-size:400px">you</div>
+ </div>
+ <div id="teal"></div>
+ <div id="logo">
+    <div id="ring"></div>
+    <svg id="markbox" viewBox="8 36 84 36" xmlns="http://www.w3.org/2000/svg">
+      <path id="arc" d="M12 68 Q50 38 88 68" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+      <circle class="dot" cx="34.8" cy="47.9" r="4.5" fill="#fff"/>
+      <circle class="dot" cx="50" cy="44.5" r="5.5" fill="#fff"/>
+      <circle class="dot" cx="65.2" cy="45.9" r="6.5" fill="#fff"/>
+    </svg>
+    <div id="wm"></div><div id="hi">काफ़िला</div><div id="tag">Saath chalo.</div>
+ </div>
+ <div id="flash"></div>
+ <canvas id="dust" width="1080" height="1920"></canvas>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const prog=(f,a,b)=>cl((f-a)/(b-a));
+const eOut=p=>1-Math.pow(1-p,3), eIn=p=>p*p*p, eInOut=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+const eBack=p=>{const c1=2.2,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R=rng(31), jit=a=>(R()*2-1)*a;
+const ph=n=>`assets/${n}.jpg`;
+
+// =====================================================================================================
+// CONFIG: the only block to edit for a new intro. Timings (frames @30fps) follow the audio hits of the ref's own cut
+// (library/music/gone-gone-tyler-reel: hit 2.34s=f70, main hit 5.44s=f164, 7.98s=f239, whoosh 9.36s=f281, hit 10.94s=f328, logo snare 13.29s=f399).
+// Move the beats only if you change the audio. One idea + ONE motion per beat; every caption must describe what is on screen.
+const CFG={
+  words:{hi:'hi!',weAre:'we are',brand:'brand',andWe:'and we',hero:['plan','group','trips'],with:'with',you:'you',chip:'13 of 20 going',tag:'Saath chalo.',hindi:'\u0915\u093e\u092b\u093c\u093f\u0932\u093e'},
+  kicks:['pick a place','meet your crew','all in one app'],            // top caption per beat B, C, D
+  places:[['SPITI','full-spiti-19'],['LADAKH','full-ladakh-25'],['KERALA','full-kerala-25'],['KASHMIR','full-kashmir-34'],['MEGHALAYA','full-meghalaya-18'],['MANALI','full-manali-10'],['& more','full-ladakh-14']], // name + 1080x1920 jpg in assets/
+  placeCuts:[164,175,186,198,210,222,233],                              // cut frames; omit/mismatch -> spread evenly over 164..239
+  crew:['manali-22','spiti-0','meghalaya-27','manali-23','ladakh-19','spiti-18','manali-26','spiti-9','manali-1','manali-30'], // 720px jpgs of people
+  phones:['discover-feed','trip-page','trip-highlights'],              // real app screens (left, front, right)
+  faces:['manali-22','manali-23','spiti-0','manali-26','spiti-18','manali-1','spiti-9','manali-30'],             // B&W traveller cards in act 1
+  beatA:[['s','in-hawa-mahal',330,640],['p','ladakh-25',790,1190,'LADAKH'],['s','th-wat-arun',280,1230],['p','kerala-25',800,720,'KERALA'],['s','jp-fuji',560,470],['p','spiti-23',250,950,'SPITI'],['s','bt-tigers-nest',860,960],['p','kashmir-5',560,1380,'KASHMIR'],['s','ch-matterhorn',420,350]] // s=clay sticker, p=photo+label: [kind,asset,cx,cy,label]
+};
+window.TOTAL_FRAMES=435;
+window.HR_FONTS=['900 40px "Playfair Display"','italic 400 40px "Playfair Display"','italic 400 40px "EB Garamond"','700 40px GeistB','600 40px "Noto Sans Devanagari"','600 40px Poppins'];
+$('t1s').textContent=CFG.words.hi; document.querySelector('#t2 [data-split]').textContent=CFG.words.weAre; $('t3s').textContent=CFG.words.brand; $('t4s').textContent=CFG.words.andWe;
+$('h1').textContent=CFG.words.hero[0]; $('h2').textContent=CFG.words.hero[1]; $('h3').textContent=CFG.words.hero[2];
+$('tw').textContent=CFG.words.with; $('ty').textContent=CFG.words.you; $('chip').textContent=CFG.words.chip; $('tag').textContent=CFG.words.tag; $('hi').textContent=CFG.words.hindi;
+['p0','p1','p2'].forEach((id,i)=>$(id).src=`assets/${CFG.phones[i]}.png`);
+
+// ---- "we are" is the only per-letter word (soft rise); everything else has its own motion ----
+document.querySelectorAll('[data-split]').forEach(l=>{const t=l.textContent; l.textContent=''; [...t].forEach(ch=>{const s=document.createElement('span'); s.className='L'; s.textContent=ch===' '?' ':ch; l.appendChild(s)})});
+
+// ---- act 1 faces + beat A cards -------------------------------------------
+const C=[]; // {t,out,type,src,w,h,cx,cy,rot,ent,label}
+const FACES=CFG.faces;
+const FACE_AT=[[170,380],[905,350],[925,640],[150,720],[190,1150],[880,1130],[540,250],[990,900]];
+FACES.forEach((n,i)=>C.push({t:22+i*2,out:52,type:'face sh',src:ph(n),w:210,h:280,cx:FACE_AT[i][0],cy:FACE_AT[i][1],rot:jit(4),ent:'pop'}));
+// beat A (f82-163): a few small cards that say where we go — landmark stickers pop, place photos slide up
+const A=CFG.beatA;
+A.forEach((a,i)=>{const t=82+i*9;
+  if(a[0]==='s') C.push({t,type:'sticker',src:`assets/${a[1]}.png`,w:250,h:250,cx:a[2],cy:a[3],rot:jit(8),ent:'pop'});
+  else C.push({t,type:'photo sh',src:ph(a[1]),w:230,h:300,cx:a[2],cy:a[3],rot:jit(3),ent:'up',label:a[4]});});
+const cont=$('cards');
+C.forEach((c,i)=>{const d=document.createElement('div'); d.className='card '+c.type; d.style.width=c.w+'px'; d.style.height=c.h+'px'; d.style.zIndex=10+i;
+  const im=new Image(); im.src=c.src; d.appendChild(im); if(c.label){const l=document.createElement('div'); l.className='lab'; l.textContent=c.label; d.appendChild(l)} cont.appendChild(d); c.el=d;});
+function enter(c,f){const p=prog(f,c.t,c.t+6), b=eBack(p), o=eOut(p); let ty=0,sc=1;
+  if(c.ent==='pop') sc=.5+.5*b; else if(c.ent==='up'){ty=(1-o)*700; sc=.92+.08*o;}
+  return {ty,sc};}
+
+// ---- beat B: place-name montage (cuts on the ref's audio hits) -------------------------
+const PL=CFG.places.map((p,i)=>[(CFG.placeCuts&&CFG.placeCuts.length===CFG.places.length)?CFG.placeCuts[i]:164+Math.round(i*75/CFG.places.length),p[0],p[1]]);
+const BEND=239;
+PL.forEach((p,i)=>{const im=new Image(); im.src=ph(p[2]); im.className='pimg'; im.style.cssText='position:absolute;left:0;top:0;width:1080px;height:1920px;object-fit:cover;display:none'; $('pbg').insertBefore(im,$('pbg').querySelector('.shade')); p.push(im);});
+// ---- beat C: marquee of travellers -------------------------------------------------
+const CREW=CFG.crew;
+[['r1',180,1],['r2',716,-1],['r3',1252,1]].forEach(([id,y,dir],k)=>{const r=$(id); r.style.top=y+'px';
+  for(let j=0;j<12;j++){const im=new Image(); im.src=ph(CREW[(j*3+k*2)%CREW.length]); r.appendChild(im);} r.dataset.dir=dir; r.dataset.k=k;});
+const PH=[[$('p0'),360,1140,0,-6],[$('p1'),460,1210,4,0],[$('p2'),360,1140,8,6]]; // el, w, h, delay
+PH.forEach(([e,w,h])=>{e.style.width=w+'px'; e.style.height=h+'px';});
+
+// ---- dust ----------------------------------------------------------------
+const dx=$('dust').getContext('2d');
+function dust(f){dx.clearRect(0,0,1080,1920); const r=rng(900+f*7); dx.fillStyle='#fff';
+  for(let i=0;i<150;i++){dx.globalAlpha=0.06+r()*0.22; const s=0.6+r()*1.7; dx.fillRect(r()*1080,r()*1920,s,s);}
+  if(f%3===0){dx.globalAlpha=.12; dx.fillRect(r()*1080,r()*1920,1,18+r()*30);}
+  dx.globalAlpha=1;}
+
+const HIT=[70,164];
+function shake(f){let dx=0,dy=0; HIT.forEach(h=>{const k=f-h; if(k>=0&&k<9){const a=(1-k/9)*(h===164?26:14); dx+=Math.sin(k*3.1)*a; dy+=Math.cos(k*2.3)*a*.7}}); return [dx,dy];}
+const ALL=['t1','t2','t3','t4','h1','h2','h3','pn','kick','chip','tw','ty','glow'];
+const KICK=[[164,CFG.kicks[0]],[239,CFG.kicks[1]],[281,CFG.kicks[2]]];
+function layout(f){
+  ALL.forEach(i=>{const e=$(i); e.style.opacity=0; e.style.transform='none'; e.style.textShadow='none'; e.style.clipPath='none'});
+  ['pbg','r1','r2','r3','p0','p1','p2'].forEach(i=>$(i).style.opacity=0);
+  $('teal').style.opacity=0; $('logo').style.opacity=0; $('flash').style.opacity=0;
+  const show=(id,a,b,anim)=>{ if(f>=a&&f<b){const e=$(id); e.style.opacity=1; if(anim)anim(e)} };
+
+  // ---- act 1: each word gets its own motion --------------------------------------------
+  show('t1',5,19,e=>{const p=eBack(prog(f,5,11)); $('t1s').style.transform=`scale(${.2+.8*p}) rotate(${(1-p)*-12}deg)`}); // hi!: pop
+  show('t2',19,52,e=>{e.querySelectorAll('.L').forEach((s,i)=>{const p=eOut(prog(f,19+i*1.5,19+i*1.5+8)); s.style.transform=`translateY(${(1-p)*40}px)`; s.style.opacity=p;})}); // we are: soft letter rise
+  show('t3',30,52,e=>{const p=eOut(prog(f,30,40)); e.style.clipPath=`inset(0 ${(1-p)*100}% 0 0)`;}); // brand: wipe L->R
+  show('t4',52,70,e=>{const p=eIn(prog(f,52,70)); $('t4s').style.transform=`scale(${1+p*3.4}) rotate(${p*-3}deg)`;}); // and we: zoom-through
+
+  // ---- hero "plan group trips" f70-164: three different slams -------------------------------
+  const split=(k,mag)=>`${-(1-k)*mag}px 0 #00e1ff, ${(1-k)*mag}px 0 #ff3b30`;
+  const kk=prog(f,70,82);
+  show('h1',70,164,e=>{const p=eOut(prog(f,72,80)); e.style.transform=`translateX(${-(1-p)*700}px)`; if(f<82)e.style.textShadow=split(kk,10)});
+  show('h2',70,164,e=>{const p=eBack(prog(f,70,78)); e.style.transform=`translateY(${-(1-p)*900}px)`; if(f<82)e.style.textShadow=split(kk,16)});
+  show('h3',70,164,e=>{const p=eOut(prog(f,74,83)); e.style.transform=`translateX(${(1-p)*800}px) rotate(${(1-p)*6}deg)`; if(f<82)e.style.textShadow=split(kk,16)});
+  // beat A cards
+  C.forEach(c=>{const e=c.el; const vis=f>=c.t&&f<(c.out||164); if(!vis){e.style.opacity=0;return}
+    const m=enter(c,f); e.style.opacity=Math.min(1,(f-c.t+1)/2);
+    e.style.transform=`translate(${c.cx-c.w/2}px,${c.cy-c.h/2+m.ty}px) rotate(${c.rot}deg) scale(${m.sc})`;});
+
+  // ---- beat B: place names (164-239): full-bleed photo + slammed name, hero hidden ----------
+  if(f>=164&&f<BEND){
+    let k=0; PL.forEach((p,i)=>{if(f>=p[0])k=i;}); const p=PL[k], end=(PL[k+1]?PL[k+1][0]:BEND), len=end-p[0], q=prog(f,p[0],end);
+    $('pbg').style.opacity=1; PL.forEach(x=>x[3].style.display='none'); const im=p[3]; im.style.display='block';
+    im.style.transform=`scale(${1.04+.1*q}) translate(${(k%2?-1:1)*q*14}px,0)`;
+    const slam=eBack(prog(f,p[0],p[0]+4)); const pn=$('pn'); pn.textContent=p[1]; pn.style.opacity=1; pn.style.fontSize=Math.min(300,Math.floor(920/(p[1].length*0.8)))+'px';
+    pn.style.transform=`scale(${1.18-.18*slam})`; pn.style.color='#fff';
+  }
+  // ---- beat C: marquee crew (239-281) ----------------------------------------------------
+  if(f>=239&&f<281){
+    ['r1','r2','r3'].forEach(id=>{const r=$(id); r.style.opacity=1; const dir=+r.dataset.dir, k=+r.dataset.k; const sp=[34,26,42][k]; const off=(f-239)*sp;
+      r.style.transform=`translateX(${dir>0?-off-300:off-1900}px)`;});
+    const cp=eBack(prog(f,258,266)); $('chip').style.opacity=prog(f,258,262); $('chip').style.transform=`scale(${.4+.6*cp})`;
+  }
+  // ---- beat D: phones (281-328) -------------------------------------------------------------
+  if(f>=281&&f<328){
+    $('glow').style.opacity=cl(prog(f,281,292));
+    const X=[190,540,890];
+    PH.forEach(([e,w,h,dly,tilt],i)=>{const a=281+dly, p=eBack(prog(f,a,a+9)), fl=Math.sin((f-a)/6+i)*8;
+      e.style.opacity=f>=a?1:0; const base=i===1?330:380;
+      e.style.transform=`translate(${X[i]-w/2}px,${base+(1-p)*1300+fl}px) rotate(${(1-p)*tilt*2+tilt*.4}deg) scale(${i===1?1.06:1})`; e.style.zIndex=i===1?237:235;});
+  }
+  // kicker (one system element, shared style): wipes in at each beat start, hidden in beat A
+  if(f>=164&&f<328){let t=KICK[0],s=164; KICK.forEach(k=>{if(f>=k[0]){t=k;s=k[0]}});
+    const e=$('kick'); e.textContent=t[1]; e.style.opacity=1; const p=eOut(prog(f,s,s+7)); e.style.clipPath=`inset(0 ${(1-p)*100}% 0 0)`;
+    e.style.color=(f>=164&&f<BEND)?'#fff':'#f6f2ea'; e.style.textShadow='0 3px 24px rgba(0,0,0,.65)';}
+
+  // ---- act 4 --------------------------------------------------------------------------------------------
+  show('tw',334,346,e=>{const p=eOut(prog(f,334,340)); e.style.transform=`translateY(${(1-p)*50}px)`; e.style.opacity=p;});
+  show('ty',346,385,e=>{const p=eBack(prog(f,346,354)); e.style.transform=`scale(${.3+.7*p+0.05*prog(f,360,385)})`;});
+
+  // camera: shake only on the two hits
+  const [sx,sy]=shake(f); $('world').style.transform=`translate(${sx}px,${sy}px)`;
+
+  // ---- act 5: teal iris -> logo (unchanged) ----------------------------------------------------------
+  if(f>=384){ const r=eOut(prog(f,384,394))*1500; const tl2=$('teal'); tl2.style.opacity=1; tl2.style.clipPath=`circle(${r}px at 50% 50%)`; }
+  if(f>=388){
+    $('logo').style.opacity=1;
+    const arcP=eOut(prog(f,388,397)); $('arc').setAttribute('stroke-dashoffset',1-arcP);
+    [392,395,398].forEach((a,i)=>{const d=document.querySelectorAll('.dot')[i]; d.style.transformBox='fill-box'; d.style.transformOrigin='center'; d.style.transform=`scale(${Math.max(0,eBack(prog(f,a,a+8)))})`});
+    const rp=prog(f,396,420), d=20+eOut(rp)*820; Object.assign($('ring').style,{opacity:rp>0&&rp<1?(1-rp)*.55:0,width:d+'px',height:d+'px',marginLeft:-d/2+'px',marginTop:-d/2+'px'});
+    const wp=eOut(prog(f,399,413)); Object.assign($('wm').style,{opacity:cl(wp*1.6),transform:`translateY(${(1-wp)*46}px)`,clipPath:`inset(0 0 ${(1-wp)*100}% 0)`,filter:`blur(${(1-wp)*10}px)`});
+    const hp=eOut(prog(f,410,424)); Object.assign($('hi').style,{opacity:hp,transform:`translateY(${(1-hp)*24}px)`});
+    const tp=eOut(prog(f,420,434)); Object.assign($('tag').style,{opacity:tp,transform:`translateY(${(1-tp)*18}px)`});
+    $('logo').style.transform=`scale(${.8*(1+0.02*prog(f,399,435))})`; $('logo').style.transformOrigin='540px 900px';
+  }
+  const fl=(a,len,pk,col)=>{if(f>=a&&f<a+len){const e=$('flash'); e.style.background=col; e.style.opacity=pk*(1-(f-a)/len)}};
+  fl(70,3,.5,'#fff'); fl(164,4,.75,'#EC6330'); fl(239,3,.45,'#fff'); fl(281,3,.4,'#fff'); fl(328,3,.5,'#fff'); fl(384,3,.4,'#fff');
+  dust(f);
+}
+window.seek=f=>layout(f);
+document.fonts.ready.then(()=>Promise.all([...document.images].map(i=>i.decode().catch(()=>0)))).then(()=>{window.READY=true});
+</script></body></html>

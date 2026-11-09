@@ -1,0 +1,294 @@
+{
+ "source": "work/input.mp4",
+ "output": "out/final.mp4",
+ "fps": 30,
+ "end_card": 0.5,
+ "cut": {
+  "pad": 0.09,
+  "max_gap": 0.28
+ },
+ "music": {
+  "volume": 0.6
+ },
+ "punch": {},
+ "scenes": [
+  {
+   "name": "orbit",
+   "from": 2.7,
+   "to": 6.0,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "cards": [
+     "Leads",
+     "Approvals",
+     "Invoices",
+     "Projects",
+     "Reports"
+    ]
+   },
+   "cues": {}
+  },
+  {
+   "name": "couchWall",
+   "from": 6.05,
+   "to": 9.35,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "text": "STOP CHASING"
+   },
+   "cues": {}
+  },
+  {
+   "name": "uiWorld",
+   "from": 9.4,
+   "to": 12.7,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "title": "Demo \u00b7 Finance",
+    "items": [
+     "Sent",
+     "Seen",
+     "Reminded",
+     "Paid"
+    ]
+   },
+   "cues": {}
+  },
+  {
+   "name": "frameBreak",
+   "from": 12.75,
+   "to": 16.05,
+   "alpha": false,
+   "plate": true,
+   "props": {},
+   "cues": {}
+  },
+  {
+   "name": "digitalZoom",
+   "from": 16.1,
+   "to": 19.4,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "to": 1.45
+   },
+   "cues": {}
+  },
+  {
+   "name": "phoneMockup",
+   "from": 19.45,
+   "to": 22.75,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "steps": [
+     "Invoice sent",
+     "Reminder on day 7",
+     "Paid \u2713"
+    ]
+   },
+   "cues": {}
+  },
+  {
+   "name": "checklist",
+   "from": 22.8,
+   "to": 26.1,
+   "alpha": true,
+   "plate": false,
+   "props": {
+    "items": [
+     "Invoice sent",
+     "Auto-reminder",
+     "Paid"
+    ]
+   },
+   "cues": {
+    "tick0": 23.4,
+    "tick1": 24.0,
+    "tick2": 24.6
+   }
+  },
+  {
+   "name": "headlineWall",
+   "from": 26.15,
+   "to": 29.45,
+   "alpha": false,
+   "plate": true,
+   "props": {},
+   "cues": {}
+  },
+  {
+   "name": "zoomThrough",
+   "from": 29.5,
+   "to": 32.8,
+   "alpha": false,
+   "plate": true,
+   "props": {},
+   "cues": {}
+  },
+  {
+   "name": "chartGrow",
+   "from": 32.85,
+   "to": 36.15,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "label": "PAID \u2197"
+   },
+   "cues": {}
+  },
+  {
+   "name": "pullBack",
+   "from": 36.2,
+   "to": 39.5,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "to": 94,
+    "suffix": " days",
+    "label": "Longest unpaid invoice"
+   },
+   "cues": {}
+  },
+  {
+   "name": "greenScreen",
+   "from": 39.55,
+   "to": 42.85,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "timer": "00:94",
+    "text": "Still waiting on payment."
+   },
+   "cues": {}
+  },
+  {
+   "name": "paperCut",
+   "from": 42.9,
+   "to": 46.2,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "text": "100%"
+   },
+   "cues": {}
+  },
+  {
+   "name": "doodleBoil",
+   "from": 46.25,
+   "to": 49.55,
+   "alpha": false,
+   "plate": true,
+   "props": {},
+   "cues": {}
+  },
+  {
+   "name": "vertigo",
+   "from": 49.6,
+   "to": 52.9,
+   "alpha": false,
+   "plate": true,
+   "props": {},
+   "cues": {}
+  },
+  {
+   "name": "coverStory",
+   "from": 52.95,
+   "to": 56.25,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "title": "PAID",
+    "lines": [
+     "The end of chasing",
+     "How agencies get paid on time"
+    ]
+   },
+   "cues": {}
+  },
+  {
+   "name": "glassType",
+   "from": 56.3,
+   "to": 59.6,
+   "alpha": false,
+   "plate": true,
+   "props": {
+    "text": "PAID"
+   },
+   "cues": {}
+  },
+  {
+   "name": "listTracker",
+   "from": 2.63,
+   "to": 61.0,
+   "alpha": true,
+   "layer": 3,
+   "props": {
+    "items": [
+     "orbit",
+     "couch wall",
+     "ui world",
+     "frame break",
+     "digital zoom",
+     "phone mockup",
+     "checklist",
+     "headline wall",
+     "zoom-through",
+     "chart grow",
+     "pull-back",
+     "green screen",
+     "paper cut",
+     "doodle boil",
+     "vertigo",
+     "cover story",
+     "glass type"
+    ]
+   },
+   "cues": {
+    "item0": 2.7,
+    "item1": 6.05,
+    "item2": 9.4,
+    "item3": 12.75,
+    "item4": 16.1,
+    "item5": 19.45,
+    "item6": 22.8,
+    "item7": 26.15,
+    "item8": 29.5,
+    "item9": 32.85,
+    "item10": 36.2,
+    "item11": 39.55,
+    "item12": 42.9,
+    "item13": 46.25,
+    "item14": 49.6,
+    "item15": 52.95,
+    "item16": 56.3
+   }
+  },
+  {
+   "name": "captions",
+   "from": 2.63,
+   "to": 61.0,
+   "alpha": true,
+   "layer": 2,
+   "captions": true,
+   "highlight": [
+    "invoice",
+    "payment",
+    "system",
+    "overdue",
+    "click",
+    "reminder",
+    "dexy",
+    "chasing"
+   ],
+   "props": {
+    "y": 1250
+   }
+  }
+ ],
+ "end_scene": null,
+ "sfx": []
+}

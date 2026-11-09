@@ -1,0 +1,69 @@
+{
+  "illustrated": {
+    "label": "Screen-print illustration ",
+    "useRef": true,
+    "prompt": "Warm, emotional poster illustration, hand-made screen-print and risograph feel, visible paper grain, flat layered shapes, soft gradient light. Not a photo, not 3D, not cartoonish. People are small, seen from behind or side, never close-up faces. Palette: apricot, burnt orange, deep teal, indigo, cream, a little coral.",
+    "type": {
+      "family": "Gloock",
+      "weight": 400,
+      "upper": false,
+      "italicEm": false,
+      "kicker": "hand"
+    }
+  },
+  "realistic": {
+    "label": "Photoreal editorial photography",
+    "prompt": "Photorealistic editorial photograph shot on location with a full-frame camera and a 35mm lens, natural light, subtle film grain, true-to-life colour, candid moments of real people in authentic clothing, not posed, no stock-photo smiles, no HDR over-processing, no AI sheen, shallow depth of field where natural. People are small in frame or seen from behind or the side, never close-up faces.",
+    "type": {
+      "family": "InstrumentSerif",
+      "weight": 400,
+      "upper": false,
+      "italicEm": true,
+      "kicker": "mono"
+    }
+  },
+  "watercolour": {
+    "label": "Hand-painted watercolour journal",
+    "prompt": "Loose hand-painted watercolour journal illustration on cold-press paper: soft bleeding washes, visible brush edges, pigment pooling, white paper showing through, light pencil line work, sketchbook feel. Muted teal, apricot, indigo, cream. People are small, seen from behind.",
+    "type": {
+      "family": "YoungSerif",
+      "weight": 400,
+      "upper": false,
+      "italicEm": false,
+      "kicker": "hand"
+    }
+  },
+  "retro": {
+    "label": "Vintage poster, flat inks",
+    "prompt": "Vintage 1950s to 1960s poster, flat bold colour blocks limited to five inks, strong geometric shapes, slight halftone and print misregistration, sun-faded paper texture, art-deco sun rays, like classic mid-century commercial posters. People are simple stylised silhouettes.",
+    "type": {
+      "family": "BigShoulders",
+      "weight": 700,
+      "upper": true,
+      "italicEm": false,
+      "kicker": "mono"
+    }
+  },
+  "collage": {
+    "label": "Layered paper-cut collage",
+    "prompt": "Layered paper-cut collage: the scene's shapes and figures cut from textured coloured papers with visible fibres, torn edges, soft drop shadows between the layers that give real depth, handmade craft look, warm teal, apricot, cream and indigo papers.",
+    "type": {
+      "family": "YoungSerif",
+      "weight": 400,
+      "upper": false,
+      "italicEm": false,
+      "kicker": "hand"
+    }
+  },
+  "clay": {
+    "label": "Soft 3D clay diorama",
+    "prompt": "Soft 3D clay-style render: rounded chunky forms, matte plasticine material, soft studio lighting, gentle shadows, a toy-like miniature diorama of the scene with tilt-shift depth, pastel teal, apricot and cream palette. Characters are small chunky clay figures seen from behind.",
+    "type": {
+      "family": "Outfit",
+      "weight": 700,
+      "upper": false,
+      "italicEm": false,
+      "kicker": "mono"
+    }
+  }
+}

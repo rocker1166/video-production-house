@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Run the carousel engine inside one brand's workspace.
+#   carousel/cf <brand> new                          workspaces/<brand>/carousel/ with specs/, art/, out/, pdf/, brand.json
+#   carousel/cf <brand> <jobs|gen|sheet|render|pdf|variants> <spec-slug> [--only a,b] [--variant v]
+set -euo pipefail
+HOUSE="$(cd "$(dirname "$0")/.." && pwd)"
+B=${1:?brand}; shift
+export CAROUSEL_HOME="$HOUSE/workspaces/$B/carousel"
+if [ "${1:-}" = new ]; then
+  [ -f "$HOUSE/brands/$B/brand.json" ] || { echo "no brands/$B/brand.json (copy brands/_template)" >&2; exit 1; }
+  mkdir -p "$CAROUSEL_HOME"/{specs,art,out,pdf}; cp "$HOUSE/brands/$B/brand.json" "$CAROUSEL_HOME/brand.json"
+  [ -f "$CAROUSEL_HOME/LEARNINGS.md" ] || printf '# %s carousel learnings\n\nRule format: `date · rule · why (their words)`. Read first, append last.\n' "$B" > "$CAROUSEL_HOME/LEARNINGS.md"
+  echo "workspace ready: workspaces/$B/carousel  (optional: art/anchor.png = the approved look; styles.json overrides the variants)"; exit 0
+fi
+exec node "$HOUSE/carousel/kc.mjs" "$@"

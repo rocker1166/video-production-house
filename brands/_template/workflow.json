@@ -1,0 +1,6 @@
+{
+  "content_types": {
+    "reach-hook": { "funnel": "awareness", "purpose": "be sent and rewatched by strangers", "crew": "standard", "metrics": ["sends per 1k views", "3-second hold", "completion"], "notes": "hook in 2 s with sound off; one open loop closed at the end" }
+  },
+  "mix": { "awareness": 0.6, "consideration": 0.3, "conversion": 0.1 }
+}

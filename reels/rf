@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Run any reel-engine command inside one brand's workspace.
+#   reels/rf <brand> new                    create workspaces/<brand>/ (library, spec, out, qc, style.json)
+#   reels/rf <brand> make.py <format> ...   python script from reels/bin  (song.py, voice.py, ref.py, fetch.py, bgm.py, make.py)
+#   reels/rf <brand> node bin/hr_render.cjs work/x --lint     any other command, run from the workspace
+set -euo pipefail
+HOUSE="$(cd "$(dirname "$0")/.." && pwd)"; E="$HOUSE/reels"
+B=${1:?brand}; shift
+export REEL_HOME="$HOUSE/workspaces/$B"
+if [ "${1:-}" = new ]; then
+  mkdir -p "$REEL_HOME"/{library/clips,library/music,library/voice,spec,out,qc,refs/ana,batches,work}
+  [ -f "$REEL_HOME/style.json" ] || cp "$E/style.json" "$REEL_HOME/style.json"
+  [ -f "$REEL_HOME/LEARNINGS.md" ] || printf '# %s reel learnings\n\nRule format: `date · rule · why (their words)`. Read first, append last.\n' "$B" > "$REEL_HOME/LEARNINGS.md"
+  echo "workspace ready: workspaces/$B  (edit style.json for the brand's fonts; see brands/$B/brand.json)"; exit 0
+fi
+[ -d "$REEL_HOME" ] || { echo "no workspace; run: reels/rf $B new" >&2; exit 1; }
+cd "$REEL_HOME"; ln -sfn "$E/bin" bin 2>/dev/null || true
+PY="$HOUSE/.venv/bin/python"; [ -x "$PY" ] || PY=python3
+case "$1" in *.py) s=$1; shift; exec "$PY" "$E/bin/$s" "$@";; *) exec "$@";; esac

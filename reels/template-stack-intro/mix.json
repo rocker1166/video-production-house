@@ -1,0 +1,9 @@
+{ "dur": 14.5,
+  "clips": [
+    {"file": "refs/DNFvM_BJZie.mp4", "t": 0.08, "from": 0.08, "to": 0.46, "fade_out": 0.08},
+    {"file": "library/music/gone-gone-tyler.mp3", "t": 0.45, "from": 275.553, "to": 277.453, "vol": 0.32, "fade_in": 0.5, "fade_out": 0.25},
+    {"file": "refs/DNFvM_BJZie.mp4", "t": 2.16, "from": 2.16, "to": 14.5, "fade_in": 0.04}
+  ],
+  "fade_out": [13.8, 0.7],
+  "loudness": {"I": -14.5, "TP": -2.2, "LRA": 9}
+}

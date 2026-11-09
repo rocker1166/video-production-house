@@ -1,0 +1,14 @@
+# never commit renders or secrets
+.env
+.venv/
+work/
+out/
+renders/
+ledger/.unlogged
+*.mov
+*.mp4
+*.wav
+node_modules/
+.DS_Store
+ledger/runs.jsonl
+workspaces/
