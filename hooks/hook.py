@@ -56,6 +56,9 @@ def guard(p):
     if re.search(INSTALL, cmd) and subprocess.run([sys.executable, os.path.join(HOME, "ledger", "cap.py"), "allowed", cmd]).returncode != 0:
         return ("Installing a skill, plugin or connector needs the user's yes. Propose it with `ledger/cap.py add`, vet it (`cap.py vet`), "
                 "ask the user, then record their words with `cap.py approve <name> \"<words>\"`. Third-party skills are a prompt-injection and supply-chain risk.")
+    if re.search(r"\bgit\s+push\b[^;&|]*\bupstream\b|\bgh\s+pr\s+(create|merge)\b|\bgh\s+api\b[^;&|]*(pulls|merge)", cmd) and "contribute.py" not in cmd:
+        return ("Pull requests and pushes to the shared repo go only through `python3 ledger/contribute.py propose ...`: it blocks assets, user data and "
+                "secrets, runs the tests, and respects the user's contribute mode. Never push to upstream directly.")
     if re.search(r"\brm\s+-\w*[rf]\w*\s+.*\b(assets|ledger|styles|engine|brands|archive|library)\b", cmd):
         return "Refusing to delete the house's memory (assets, ledger, styles, engine, brands, library, archive). Use `ledger/clean.py`, or ask the user first."
     return None

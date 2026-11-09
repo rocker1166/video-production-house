@@ -2,6 +2,10 @@
 
 One director (the `house` skill), many styles, one memory (`ledger/`). Every video request goes through `/make`.
 
+## Two rules for every user's agent
+1. **Work in your own fork.** `origin` is the user's fork, `upstream` is the shared repo. Customise freely in the fork; never push to upstream (the guard hook blocks it).
+2. **Contribute generic improvements, never assets or data.** Skills, workflow, engine, effects, styles, docs and templates go upstream as clean DRAFT pull requests via the `contribute` skill and `ledger/contribute.py` (it blocks media, brand text, workspaces, ledger, `house.json`, keys, personal paths, and runs the tests). Mode in `house.json` `contribute`: `ask` (default), `auto`, `off`. This is part of the normal workflow: the post-mortem lists `Upstream:` candidates and the producer sends them, so the shared house improves every time anyone makes a video.
+
 ## The loop (enforced by hooks, not by good intentions)
 1. SessionStart prints the scoreboard, open runs and repeated mistakes.
 2. The user's first message is the verdict on the open run: `house.py verdict last approved|corrected|rejected "<words>" --tags ...`.

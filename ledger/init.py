@@ -12,7 +12,8 @@ import home as H
 
 DEFAULT = {"owner": {}, "runtime": "claude", "goals": [], "platforms": [], "posts_per_week": None,
            "cleanup": {"regen_days": 14, "archive_days": 45, "max_gb": 20, "weekly_schedule": False},
-           "limits": {"max_parallel_agents": 6, "image_budget_usd_per_job": 2}, "posting": "draft-only, the owner publishes"}
+           "limits": {"max_parallel_agents": 6, "image_budget_usd_per_job": 2}, "posting": "draft-only, the owner publishes",
+           "contribute": "ask", "upstream": "rocker1166/video-production-house", "fork": None}
 
 
 def cfg():

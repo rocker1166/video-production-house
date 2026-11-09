@@ -9,6 +9,13 @@ Works in **Claude Code** (`/setup`) and **Codex** (`$setup`, or "follow SETUP.md
 ## 1. Install the requirements
 `bash install.sh` (macOS Homebrew, Linux apt/dnf/pacman, Windows via WSL2). It installs tools, creates `.env`, runs the doctor. Explain before running: it installs packages on this machine. Missing keys are optional (ElevenLabs for voice/sfx, Gemini for carousel pictures).
 
+## 1b. Fork it (RULE 1: work in your own fork, never in the shared repo)
+Everyone customises their own copy and the shared project improves through pull requests, not by editing it directly.
+- If you cloned `rocker1166/video-production-house` directly: `gh repo fork rocker1166/video-production-house --clone=false`, then point this folder at it: `git remote rename origin upstream && git remote add origin https://github.com/<you>/video-production-house.git` (or fork first and clone the fork). Result: `origin` = your fork, `upstream` = the shared repo.
+- Keep your changes on your fork's `main` or branches: customised skills, prompts for your workflow, extra roles. **Your products, assets and data are not in the repo at all** (they live in the data home, step 2), so nothing private can end up in the fork either.
+- Stay current: `git fetch upstream && git merge upstream/main` (or rebase) when the user agrees.
+- Record it: `python3 ledger/init.py merge '{"fork":"<you>/video-production-house"}'`.
+
 ## 2. Choose where everything lives (ONE folder for all products)
 Ask, with choices:
 1. `~/VideoHouse` **(recommended)**: private, local, easy to back up.
@@ -29,6 +36,13 @@ For each product ask or derive: what it is and does, who it is for, the **tone**
 Then: `python3 ledger/home.py new-brand <name>`; fill `BRAND.md` and `brand.json`; write `refs.json` (paths, purpose, `read`); read the linked repos **read-only** (README, package manifest, UI strings) and write a one-page `CONTEXT.md`; optional per-role prompt additions in `prompts/<role>.md`.
 Nothing from one product may be used for another: this is enforced by `python3 ledger/home.py use <brand>` plus the guard hook.
 
+## 3c. Give back (RULE 2: contribute improvements, never your assets or data)
+Explain: when the agent finds a generic improvement (a better skill, a workflow fix, an engine bug, a new effect or style, a doc), it can send it to the shared repo as a **draft pull request** so every user's house improves. Only skills, workflow, engine, effects, styles, docs and templates can leave: the gate (`ledger/contribute.py`) blocks any media or binary, any brand or product text, workspaces, ledger, `house.json`, keys, personal paths and emails, and runs the tests. Ask the user to choose:
+1. **Ask each time (recommended):** the agent prepares the PR, shows what it contains, asks one question.
+2. **Automatic draft PRs:** the agent opens a draft PR itself after the gate passes (a maintainer still reviews and merges). Best once they have watched a few.
+3. **Off:** nothing is sent, ever.
+Save with `python3 ledger/init.py merge '{"contribute":"ask"}'` (or `auto` / `off`). Changeable any time.
+
 ## 4. Strategy and first pilot
 Offer to run `observe` strategy mode for each product (content types, metrics, first experiments), then make **one pilot** (one reel or carousel) through `/produce` and take the reaction as the first verdict.
 
@@ -39,4 +53,4 @@ Explain in one line: finished jobs are archived (restorable) and rebuildable scr
 Claude Code: nothing more (it reads `.claude/`). Codex: `python3 adapters/codex.py` generates `AGENTS.md`, `.codex/agents/*.toml`, `.codex/hooks.json`, `.agents/skills/` from the single source in `.claude/`; open `/hooks` in Codex and trust the project hooks.
 
 ## 7. Verify and finish
-`bash engine/doctor.sh`, `python3 ledger/house.py selftest`, `python3 ledger/job.py selftest`, `python3 ledger/clean.py report`. Print a summary: data home path, products and their linked repos, autonomy level, cleanup choice, the next command to run. Save no secrets in chat or files other than `.env`.
+`bash engine/doctor.sh`, `python3 ledger/house.py selftest`, `python3 ledger/job.py selftest`, `python3 ledger/clean.py report`. Print a summary: data home path, fork and upstream remotes, contribution mode, products and their linked repos, autonomy level, cleanup choice, the next command to run. Save no secrets in chat or files other than `.env`.

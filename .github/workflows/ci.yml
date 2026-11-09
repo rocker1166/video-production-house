@@ -24,6 +24,7 @@ jobs:
           python3 ledger/home.py selftest
           python3 ledger/clean.py selftest
           python3 ledger/init.py selftest
+          python3 ledger/contribute.py selftest
           python3 adapters/codex.py --check
           python3 - <<'PY'
           import glob,re

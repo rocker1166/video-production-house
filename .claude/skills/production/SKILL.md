@@ -52,6 +52,7 @@ Only a build that passed QC is shown. Send the mp4 or PNGs + thumbnail + caption
 
 ## 7. Post-mortem (after the verdict)
 Record the verdict (`house.py verdict`). Dispatch **toolsmith**: `Job folder: <path>. Verdict: "<their words>". Write postmortem.md and propose patches.` It classifies faults and improves the tool.
+**Give back:** if `postmortem.md` has `Upstream:` items (generic, no brand data), run the `contribute` skill per the `contribute` mode in `house.json` (ask: prepare and ask once; auto: open a draft PR; off: skip). Never send anything brand-specific.
 You then: apply rule promotions (`house.py promote`), approve or reject its engine and agent-prompt proposals with the user (engine and `.claude/agents/` changes are never silent), run `house.py selftest`, and append one line to `ledger/LEARNINGS.md`.
 
 ## Cost and hygiene

@@ -1,0 +1,23 @@
+name: contribution-check
+on: { pull_request: { types: [opened, synchronize, reopened] } }
+jobs:
+  gate:
+    # fork PRs only: the maintainer's own PRs may touch .github/ and assets
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - name: trusted gate (the base branch's own script, never the PR's copy)
+        uses: actions/checkout@v4
+        with: { ref: "${{ github.base_ref }}", path: trusted }
+      - name: untrusted PR checkout
+        uses: actions/checkout@v4
+        with: { fetch-depth: 0, ref: "${{ github.event.pull_request.head.sha }}", path: pr }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: base ref
+        run: git -C pr fetch origin "${{ github.base_ref }}":base_ref
+      - name: privacy and quality gate (no assets, no user data, no secrets, tests green)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          CONTRIB_REPO="$PWD/pr" python3 trusted/ledger/contribute.py check --base base_ref

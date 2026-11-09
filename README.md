@@ -6,7 +6,7 @@ An open-source video studio that runs inside [Claude Code](https://claude.com/cl
 - **Make reels for any product or niche** from stock footage cut on a song's beats, or a voiceover.
 - **Make carousels for any product or niche**: 1080x1350 art-led slides, brand colours, PNG + PDF.
 - **Narrated explainer films** in a paper-collage style (Remotion).
-- **Runs as a production crew**: a producer plus 11 role subagents (researcher, scriptwriter, art director, storyboarder, asset wrangler, sound designer, cinematographer, editor, two QC reviewers, toolsmith) that adapts its crew per job and can invent new roles.
+- **Runs as a production crew**: a producer plus 12 role subagents (researcher, scriptwriter, art director, storyboarder, asset wrangler, sound designer, cinematographer, editor, two QC reviewers, toolsmith) that adapts its crew per job and can invent new roles.
 - **Understands your goal**: an observer turns "I'm growing my agency" into a content strategy, reviews the whole system against audience metrics, and vets new skills and tools (nothing is installed or posted without your yes).
 - **Learns**: every video gets a verdict; repeated corrections become rules; styles that keep getting approved earn autonomy.
 
@@ -17,7 +17,9 @@ An open-source video studio that runs inside [Claude Code](https://claude.com/cl
 ## 1. Quick start (10 minutes)
 
 ```bash
-git clone <this repo> video-house && cd video-house
+# fork first (rule 1: work in your own fork), then clone YOUR fork:
+gh repo fork rocker1166/video-production-house --clone && cd video-production-house
+git remote add upstream https://github.com/rocker1166/video-production-house.git  # skip if gh already did
 bash install.sh        # macOS (Homebrew) · Linux (apt, dnf, pacman) · Windows: run it inside WSL2, see below
 claude                 # open Claude Code in this folder (or `codex`, see section 4.9), then run /setup
 ```
@@ -185,6 +187,12 @@ VideoHouse/
 ### 4.11 Codex
 Claude Code is the source of truth; Codex gets generated files: `python3 adapters/codex.py` writes `AGENTS.md`, `.codex/agents/*.toml` (the 13 roles), `.codex/hooks.json`, `.codex/config.toml` and `.agents/skills/` (the 10 house skills). Open the repo in Codex, trust the project hooks once with `/hooks`, and invoke skills with `$setup`, `$production`, `$observe`, `$reel-factory`... (`AGENTS.md` has the command map). The format follows OpenAI's current Codex docs; I found no product called "Codex 2", so if you mean something newer, `adapters/codex.py` is the one file to adjust. Differences: Codex agent files have no tool restrictions (each role's limits are written into its instructions instead of enforced), and the exact hook payload fields Codex sends are assumed to match Claude's. CI fails if the generated files go stale.
 
+### 4.12 Fork it, customise it, give back
+Two rules for every user and every agent (`CLAUDE.md`, `AGENTS.md`, `SETUP.md`, `CONTRIBUTING.md`):
+1. **Work in your own fork.** `origin` is your fork, `upstream` is this repo. Customise skills, prompts and roles in your fork. Your products, clips, songs and runs live in your data home outside the repo, so they are never in git.
+2. **Send back what helps everyone, never your assets or data.** After a video, the post-mortem lists generic improvements (`Upstream:`). The `contribute` skill turns them into a branch with only those files and opens a **draft pull request** here. The gate (`python3 ledger/contribute.py check`) blocks media and binaries, brand-specific text, workspaces, ledger, `house.json`, keys, personal paths and emails, oversized diffs and failing tests; CI runs the same gate on every fork PR from the base branch, so a PR cannot weaken its own check.
+Pick a mode in `/setup` (`house.json` → `contribute`): `ask` (default: the agent prepares the PR and asks once), `auto` (opens draft PRs itself; a maintainer still reviews and merges), or `off`. Pushing to `upstream` and `gh pr create` are blocked outside this script. Maintainers review with `/review-prs` (the `pr-reviewer` agent plus a human read; posting and merging stay the maintainer's click).
+
 ## 5. How it learns
 
 ```
@@ -224,7 +232,7 @@ styles/           looks: vox, vox-film, beatcut, carousel, html-teaser, trend-re
 reels/            reel engine (make/render/song/voice), FORMATS.md, `rf` runner, teaser template
 carousel/         carousel engine (kc.mjs, gen.mjs), template, fonts, `cf` runner
 assets/           cached sound effects and music loops
-ledger/           house.py (ledger, metrics, report), job.py (jobs, gates, QC cap), home.py (data home, isolation), init.py, clean.py (cleanup), cap.py (capabilities), runs.example.jsonl, LEARNINGS.md
+ledger/           house.py (ledger, metrics, report), job.py (jobs, gates, QC cap), home.py (data home, isolation), init.py, clean.py (cleanup), cap.py (capabilities), contribute.py (privacy gate + pull requests), runs.example.jsonl, LEARNINGS.md
 hooks/            guard, mark, stop
 adapters/         codex.py: generates the Codex version from .claude/
 SETUP.md          the guided first run (also `/setup`)
