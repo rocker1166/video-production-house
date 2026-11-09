@@ -4,9 +4,11 @@
 #   reels/rf <brand> make.py <format> ...   python script from reels/bin  (song.py, voice.py, ref.py, fetch.py, bgm.py, make.py)
 #   reels/rf <brand> node bin/hr_render.cjs work/x --lint     any other command, run from the workspace
 set -euo pipefail
-HOUSE="$(cd "$(dirname "$0")/.." && pwd)"; E="$HOUSE/reels"
+HOUSE="$(cd "$(dirname "$0")/.." && pwd)"
+E="$HOUSE/reels"
+DATA="$(python3 "$HOUSE/ledger/home.py" data)"   # your data home (brands, workspaces), not the engine repo
 B=${1:?brand}; shift
-export REEL_HOME="$HOUSE/workspaces/$B"
+export REEL_HOME="$DATA/workspaces/$B"
 if [ "${1:-}" = new ]; then
   mkdir -p "$REEL_HOME"/{library/clips,library/music,library/voice,spec,out,qc,refs/ana,batches,work}
   [ -f "$REEL_HOME/style.json" ] || cp "$E/style.json" "$REEL_HOME/style.json"

@@ -18,10 +18,13 @@ Any correction/rejection drops it back to `propose`.
 Tags: `fx:<effect>` blames an effect; any other tag names a repeatable mistake (e.g. `font`, `sync`).
 """
 import json, os, sys, time, collections, tempfile
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import home as _home
 
 HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LEDGER = os.environ.get("HOUSE_LEDGER", os.path.join(HOME, "ledger", "runs.jsonl"))
-DIRTY = os.path.join(HOME, "ledger", ".unlogged")  # set by the render hook, cleared by `log`
+_D = lambda f: os.path.join(_home.data(), "ledger", f)  # runs, verdicts, metrics live in the data home, not the engine repo
+LEDGER = os.environ.get("HOUSE_LEDGER") or _D("runs.jsonl")
+DIRTY = _D(".unlogged")  # set by the render hook, cleared by `log`
 
 
 def load():
@@ -31,6 +34,7 @@ def load():
 
 
 def save(rows):
+    os.makedirs(os.path.dirname(LEDGER), exist_ok=True)
     with open(LEDGER, "w") as f:
         f.writelines(json.dumps(r) + "\n" for r in rows)
 
@@ -159,7 +163,7 @@ def report():
         print(f"{st + ' / ' + ty:<30}{len(ms):>3}  {per('sends'):>8.1f}  {per('saves'):>8.1f}  {per('likes'):>8.1f}  {(sum(comp) / len(comp) if comp else float('nan')):>9.2f}")
 
 
-OBS = os.path.join(HOME, "ledger", "observer.json")
+OBS = _D("observer.json")
 
 
 def observer_due(n_runs):
@@ -200,7 +204,9 @@ def brief():
 
 def selftest():
     global LEDGER
-    LEDGER = os.path.join(tempfile.mkdtemp(), "runs.jsonl")
+    global OBS, DIRTY
+    os.environ["HOUSE_HOME"] = tempfile.mkdtemp()  # selftest never touches real data
+    LEDGER, OBS, DIRTY = _D("runs.jsonl"), _D("observer.json"), _D(".unlogged")
     for i in range(3):
         log(json.dumps({"style": "t", "effects": ["vertigo"]}))
         verdict(["last", "approved"])

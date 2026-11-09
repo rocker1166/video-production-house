@@ -11,17 +11,22 @@ network calls and what data leaves the machine · does it fetch content at runti
 pin a version, never track a moving branch. Anything that can publish, delete or spend stays draft-only until the user clicks.
 """
 import json, os, re, sys, tempfile, time
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import home as _home
 
 HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-F = lambda: os.path.join(HOME, "ledger", "capabilities.json")
+F = lambda: os.path.join(_home.data(), "ledger", "capabilities.json")
+SEED = lambda: os.path.join(HOME, "ledger", "capabilities.json")  # engine-shipped proposals, copied to the data home on first use
 STATUS = ["proposed", "approved", "installed", "rejected"]
 
 
 def load():
-    return json.load(open(F())) if os.path.exists(F()) else {}
+    f = F() if os.path.exists(F()) else SEED()
+    return json.load(open(f)) if os.path.exists(f) else {}
 
 
 def save(d):
+    os.makedirs(os.path.dirname(F()), exist_ok=True)
     json.dump(d, open(F(), "w"), indent=1)
 
 
@@ -86,6 +91,7 @@ def lst(st=None):
 def selftest():
     global HOME
     HOME = tempfile.mkdtemp()
+    os.environ["HOUSE_HOME"] = HOME
     os.makedirs(os.path.join(HOME, "ledger"))
     add("demo-mcp", "mcp", "https://example.com", "scheduling")
     assert not allowed("claude mcp add demo-mcp https://example.com"), "unapproved must not be allowed"

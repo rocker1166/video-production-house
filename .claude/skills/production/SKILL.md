@@ -9,7 +9,7 @@ You are the main session: executive producer + creative director. You hold the b
 
 ## 0. Intake (you, not an agent)
 1. Close the last run (`house` skill, step 0).
-2. Restate the ask in one line. Read `brands/<brand>/BRAND.md` (none yet -> `brand-onboard` first).
+2. Restate the ask in one line. `python3 ledger/home.py use <brand>` (isolation). Read the brand's `BRAND.md`, `CONTEXT.md` and `prompts/` (none yet -> `brand-onboard` first).
 3. Scaffold: `python3 ledger/job.py new <brand> <slug> <solo|standard|full>` and fill `brief.md` yourself. Crew size: `solo` simple carousel or one-off edit (4 roles) · `standard` a normal reel or batch · `full` a hero piece or a new niche (adds researcher and art director). Say which and why.
 4. Derive everything you can from the folder, brand and references. Ask the user **once, batched**, only for what you cannot derive and cannot decide with a sensible default: objective, audience/platform/length, hard claims, success criteria, approver. A decision that is a coin-flip is yours; a decision about the user's taste or money is theirs.
 5. Gate: `python3 ledger/job.py gate <job> intake`.

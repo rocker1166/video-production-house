@@ -21,6 +21,10 @@ jobs:
           python3 ledger/house.py selftest
           python3 ledger/job.py selftest
           python3 ledger/cap.py selftest
+          python3 ledger/home.py selftest
+          python3 ledger/clean.py selftest
+          python3 ledger/init.py selftest
+          python3 adapters/codex.py --check
           python3 - <<'PY'
           import glob,re
           for f in glob.glob('.claude/agents/*.md'):

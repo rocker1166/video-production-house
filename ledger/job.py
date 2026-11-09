@@ -17,6 +17,8 @@ and lets the crew grow: roles live in ledger/roles.json, and the producer can ad
 Gates check FILES, not opinions: an artifact must exist, be non-empty and contain no TODO/<placeholder>.
 """
 import json, os, re, sys, tempfile, time
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import home as _home
 
 HOME = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REG = lambda: os.path.join(HOME, "ledger", "roles.json")
@@ -68,7 +70,7 @@ def save_registry(r):
 
 
 def jobdir(p):
-    return p if os.path.isabs(p) else os.path.join(HOME, p)
+    return p if os.path.isabs(p) else os.path.join(_home.data(), p)
 
 
 def load(d):
@@ -86,7 +88,7 @@ def roleinfo(j, role):
 
 def content_type(brand, name):
     """A content type (hook, story, proof, offer...) from brands/<brand>/workflow.json: crew, success metrics, notes."""
-    f = os.path.join(HOME, "brands", brand, "workflow.json")
+    f = os.path.join(_home.brand_dir(brand), "workflow.json")
     if not os.path.isfile(f):
         sys.exit(f"no {f}: run the observer's strategy mode, or copy brands/_template/workflow.json")
     t = json.load(open(f)).get("content_types", {})
@@ -105,15 +107,22 @@ def new(brand, slug, crew="standard"):
     unknown = [r for r in roles if r not in registry()]
     if unknown:
         sys.exit(f"unknown role(s) {unknown}. Known: {sorted(registry())}. Invent one with `adhoc` after creating the job.")
-    d = os.path.join(HOME, "workspaces", brand, "jobs", slug)
+    d = os.path.join(_home.data(), "workspaces", brand, "jobs", slug)
     os.makedirs(os.path.join(d, "out"), exist_ok=True)
     os.makedirs(os.path.join(d, "assets"), exist_ok=True)
     ts = time.strftime("%Y-%m-%d")
     brief = BRIEF.format(slug=slug, brand=brand, crew=crew if crew in CREWS else "custom", ts=ts)
+    bd = _home.brand_dir(brand)
+    files = [f for f in ("BRAND.md", "CONTEXT.md", "STRATEGY.md", "workflow.json") if os.path.isfile(os.path.join(bd, f))]
+    brief += "\n## Brand files (read these; they are the ONLY brand material you may use)\n" + "".join(f"- {os.path.join(bd, f)}\n" for f in files)
+    brief += f"- per-role additions: {os.path.join(bd, 'prompts')}/<your-role>.md (if it exists)\n"
+    for r in _home.refs(brand):
+        brief += f"- linked repo ({r.get('mode', 'read')}-only): {os.path.expanduser(r['path'])} : {r.get('purpose', '')}\n"
     if ctype:
         sp = content_type(brand, ctype)
         brief += f"\n## Content type: {ctype}\nFunnel role: {sp.get('funnel','?')} · Purpose: {sp.get('purpose','')}\nMeasure after posting: {', '.join(sp.get('metrics', []))}\nNotes: {sp.get('notes','')}\n"
     open(os.path.join(d, "brief.md"), "w").write(brief)
+    open(os.path.join(_home.data(), ".active-brand"), "w").write(brand)  # isolation follows the job
     save(d, {"brand": brand, "slug": slug, "crew": crew if crew in CREWS else "custom", "type": ctype, "roles": roles, "adhoc": {}, "qc_loops": 0, "created": ts})
     print(d)
 
@@ -254,6 +263,7 @@ def selftest():
     global HOME
     real_reg = open(REG()).read()
     HOME = tempfile.mkdtemp()
+    os.environ["HOUSE_HOME"] = HOME  # data home = temp too
     os.makedirs(os.path.join(HOME, "ledger"))
     open(REG(), "w").write(real_reg)
     os.makedirs(os.path.join(HOME, ".claude", "agents"))
@@ -289,7 +299,7 @@ def selftest():
     promote(d, "color-grader")
     assert os.path.isfile(os.path.join(HOME, ".claude", "agents", "color-grader.md")) and "color-grader" in registry()
     new("b", "t", "scriptwriter,editor")
-    os.makedirs(os.path.join(HOME, "brands", "b"))
+    os.makedirs(os.path.join(HOME, "brands", "b"), exist_ok=True)
     json.dump({"content_types": {"hook": {"crew": "solo", "funnel": "awareness", "purpose": "reach", "metrics": ["sends/1k", "3s hold"]}}}, open(os.path.join(HOME, "brands", "b", "workflow.json"), "w"))
     new("b", "u", "type:hook")
     assert load(os.path.join(HOME, "workspaces", "b", "jobs", "u"))["type"] == "hook" and "sends/1k" in open(os.path.join(HOME, "workspaces", "b", "jobs", "u", "brief.md")).read()

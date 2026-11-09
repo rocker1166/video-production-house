@@ -1,0 +1,5 @@
+{
+  "refs": [
+    { "path": "~/path/to/this-products-repo", "purpose": "source of truth for features and real UI copy", "mode": "read" }
+  ]
+}

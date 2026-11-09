@@ -19,15 +19,19 @@ An open-source video studio that runs inside [Claude Code](https://claude.com/cl
 ```bash
 git clone <this repo> video-house && cd video-house
 bash install.sh        # macOS (Homebrew) · Linux (apt, dnf, pacman) · Windows: run it inside WSL2, see below
-claude                 # open Claude Code in this folder: skills, commands and hooks load from .claude/
+claude                 # open Claude Code in this folder (or `codex`, see section 4.9), then run /setup
 ```
 Prefer to do it by hand? Install ffmpeg, aubio, yt-dlp, node and python 3.10-3.12 with your package manager, `cp .env.example .env`, `bash engine/doctor.sh` (wait for `READY`).
 Claude Code asks you to trust the folder the first time; say yes, or the hooks will not run.
+
+`/setup` is the guided first run: it asks your goals, creates **one data folder for all your products**, links each product's repos, and sets autonomy and cleanup (`SETUP.md` has the same steps if you prefer to follow them by hand).
 
 Then, inside Claude Code:
 
 | You want | Type |
 |---|---|
+| First run: install, goals, products, cleanup | `/setup` |
+| Add another product later | `/setup add-product <name>` |
 | Edit a raw clip | `/video-edit ~/Downloads/clip.mp4` |
 | Set up a product (once) | `/brand MyProduct https://myproduct.com` |
 | Make reels | `/reel myproduct "burnt-out office workers"` |
@@ -160,6 +164,27 @@ The crew is **adaptive**: `solo` (4 roles), `standard` (8) and `full` (10) are o
 Tell it the goal in your own words ("I'm growing my agency") and `/observe` turns it into a strategy: which content types you need (reach hooks, trust-building proof, authority explainers, offers, conversation), the metrics that prove each worked, the first experiments, and a workflow profile (`brands/<brand>/workflow.json`) so `/produce <brand> type:story-proof` builds the right crew for that job. Every ~5 videos the session reminds you (**OBSERVER DUE**) and it reviews the whole system: where time and QC loops went, which styles actually earned reach (needs your post analytics: `python3 ledger/house.py metrics <id> '{"views":..,"sends":..,"saves":..}'`, then `house.py report`), and what to change.
 It also scouts skills, plugins and connectors (analytics, trend research, voice, draft-only scheduling) and vets them. **Nothing is installed or posted without your yes**: the registry `ledger/capabilities.json` holds proposals; a hook blocks `claude mcp add` and `plugin install` until you approve. See `docs/OBSERVER.md` for the research and the install policy, and `brands/example-agency/` for a worked agency-growth strategy.
 
+### 4.9 One folder, many products (the data home and isolation)
+The repo is the **engine**; your data lives in **one data home** (default `~/VideoHouse`, chosen in `/setup`, found by every script via `~/.config/video-house/home` or `HOUSE_HOME`):
+
+```
+VideoHouse/
+  house.json            your goals, autonomy level, cleanup policy, limits
+  brands/<product>/     BRAND.md (voice) · CONTEXT.md (what the product is) · STRATEGY.md · workflow.json
+                        refs.json (this product's repos and folders, read-only) · prompts/<role>.md (per-role additions)
+  workspaces/<product>/ clips, songs, art, jobs, outputs
+  library/              reusable things harvested from approved jobs
+  ledger/               runs, verdicts, metrics, capabilities
+  archive/              old finished jobs, compressed and restorable
+```
+**Each product is isolated:** its tone, prompts, context, strategy and linked code are used only for that product. `python3 ledger/home.py use <product>` (also done by `job.py new`) sets the active product, and the guard hook blocks any read or write of another product's folders, workspaces or linked repos, and any edit of a read-only linked repo. Role briefs list only the active product's files. The hook checks shell commands by path text, so a deliberate `cd` trick can get past it; treat it as a seatbelt, not a vault.
+
+### 4.10 Keeping it small (cleanup)
+`python3 ledger/clean.py report` shows disk use per product and what a cleanup would do. `run` is a dry run; `run --apply-safe` does only the reversible classes: it deletes rebuildable scratch (plates, frames, tmp, stills) older than 14 days and archives finished jobs untouched for 45 days (the archive is verified before the original is removed; `restore <brand> <slug>` brings it back). Clips, songs, finals, brands, library, ledger and your linked repos are never touched automatically, and symlinks are never followed. `harvest` copies the scripts, hooks, shot lists and plans of **approved** jobs into `library/` so the good parts survive the archive. `schedule --install` adds a weekly cron entry (WSL on Windows). Thresholds live in `house.json`.
+
+### 4.11 Codex
+Claude Code is the source of truth; Codex gets generated files: `python3 adapters/codex.py` writes `AGENTS.md`, `.codex/agents/*.toml` (the 13 roles), `.codex/hooks.json`, `.codex/config.toml` and `.agents/skills/` (the 10 house skills). Open the repo in Codex, trust the project hooks once with `/hooks`, and invoke skills with `$setup`, `$production`, `$observe`, `$reel-factory`... (`AGENTS.md` has the command map). The format follows OpenAI's current Codex docs; I found no product called "Codex 2", so if you mean something newer, `adapters/codex.py` is the one file to adjust. Differences: Codex agent files have no tool restrictions (each role's limits are written into its instructions instead of enforced), and the exact hook payload fields Codex sends are assumed to match Claude's. CI fails if the generated files go stale.
+
 ## 5. How it learns
 
 ```
@@ -199,9 +224,11 @@ styles/           looks: vox, vox-film, beatcut, carousel, html-teaser, trend-re
 reels/            reel engine (make/render/song/voice), FORMATS.md, `rf` runner, teaser template
 carousel/         carousel engine (kc.mjs, gen.mjs), template, fonts, `cf` runner
 assets/           cached sound effects and music loops
-ledger/           house.py (ledger, metrics, report), job.py (job folders, gates, QC cap), cap.py (capability registry), runs.example.jsonl, LEARNINGS.md
+ledger/           house.py (ledger, metrics, report), job.py (jobs, gates, QC cap), home.py (data home, isolation), init.py, clean.py (cleanup), cap.py (capabilities), runs.example.jsonl, LEARNINGS.md
 hooks/            guard, mark, stop
-workspaces/       YOUR per-brand data: clips, songs, art, outputs (git-ignored)
+adapters/         codex.py: generates the Codex version from .claude/
+SETUP.md          the guided first run (also `/setup`)
+(your data lives outside the repo, in the data home: brands/, workspaces/, library/, ledger/, archive/)
 ```
 
 ---
@@ -231,5 +258,5 @@ workspaces/       YOUR per-brand data: clips, songs, art, outputs (git-ignored)
 ## 9. Open source
 
 MIT, see `LICENSE`. Third-party material and its licences: `NOTICE.md`. **Before you publish a fork**, read `assets/README.md`: the bundled sounds were generated with ElevenLabs and their redistribution rights are unconfirmed.
-Your `ledger/runs.jsonl` and `workspaces/` are yours and never committed, so the same repo trains differently for everyone.
+Your data home (runs, brands, workspaces) is yours and lives outside the repo, so the same repo trains differently for everyone.
 Contributing: `CONTRIBUTING.md` (a style, an effect, or a lesson).

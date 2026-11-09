@@ -4,11 +4,13 @@
 #   carousel/cf <brand> <jobs|gen|sheet|render|pdf|variants> <spec-slug> [--only a,b] [--variant v]
 set -euo pipefail
 HOUSE="$(cd "$(dirname "$0")/.." && pwd)"
+DATA="$(python3 "$HOUSE/ledger/home.py" data)"   # your data home (brands, workspaces), not the engine repo
 B=${1:?brand}; shift
-export CAROUSEL_HOME="$HOUSE/workspaces/$B/carousel"
+export CAROUSEL_HOME="$DATA/workspaces/$B/carousel"
 if [ "${1:-}" = new ]; then
-  [ -f "$HOUSE/brands/$B/brand.json" ] || { echo "no brands/$B/brand.json (copy brands/_template)" >&2; exit 1; }
-  mkdir -p "$CAROUSEL_HOME"/{specs,art,out,pdf}; cp "$HOUSE/brands/$B/brand.json" "$CAROUSEL_HOME/brand.json"
+  BD="$DATA/brands/$B"; [ -d "$BD" ] || BD="$HOUSE/brands/$B"
+  [ -f "$BD/brand.json" ] || { echo "no brand $B: python3 ledger/home.py new-brand $B" >&2; exit 1; }
+  mkdir -p "$CAROUSEL_HOME"/{specs,art,out,pdf}; cp "$BD/brand.json" "$CAROUSEL_HOME/brand.json"
   [ -f "$CAROUSEL_HOME/LEARNINGS.md" ] || printf '# %s carousel learnings\n\nRule format: `date · rule · why (their words)`. Read first, append last.\n' "$B" > "$CAROUSEL_HOME/LEARNINGS.md"
   echo "workspace ready: workspaces/$B/carousel  (optional: art/anchor.png = the approved look; styles.json overrides the variants)"; exit 0
 fi

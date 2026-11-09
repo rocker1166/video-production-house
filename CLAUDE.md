@@ -11,7 +11,7 @@ One director (the `house` skill), many styles, one memory (`ledger/`). Every vid
 
 ## Layout
 `engine/` render+cut pipeline · `effects/` 17 named effects + selection table · `styles/` the looks · `assets/` cached sfx+music (never regenerate) ·
-`reels/` + `carousel/` brand-agnostic factories · `brands/` per-product profiles · `ledger/` runs.jsonl (the reinforcement signal) + LEARNINGS.md · `hooks/` guard, mark, stop · `.claude/skills/` house, video-editing, style-forge, debrief.
+`reels/` + `carousel/` brand-agnostic factories · `brands/` example and template products (yours live in the data home) · `ledger/` runs.jsonl (the reinforcement signal) + LEARNINGS.md · `hooks/` guard, mark, stop · `.claude/skills/` house, video-editing, style-forge, debrief.
 
 ## The crew (role subagents)
 For any non-trivial job the main session is the producer (`production` skill, `/produce`) and dispatches role agents from `.claude/agents/`: researcher, scriptwriter, art-director, storyboarder, asset-wrangler, sound-designer, cinematographer, editor, qc-picture, qc-audio, toolsmith. Files in a job folder are the only handoff; each role writes only its own file; `ledger/job.py` checks the gates; QC is independent and capped at 3 loops; the toolsmith improves the tool after every verdict. Spec: `docs/WORKFLOW.md`. Subagents default to haiku; engine and agent-prompt changes are proposals the user approves.
@@ -19,8 +19,15 @@ For any non-trivial job the main session is the producer (`production` skill, `/
 ## The observer (purpose and self-improvement)
 `observer` understands the user's goal and turns it into a content strategy and workflow profile per brand (`brands/<b>/STRATEGY.md`, `workflow.json`), then every ~5 runs reviews the whole system against audience metrics and proposes improvements; `capability-scout` finds and vets skills, plugins and connectors. Run it with `/observe`. It only proposes. **Installs need the user's yes** (`ledger/cap.py`; the guard hook blocks `claude mcp add` / `plugin install` otherwise) and posting is always draft-only. Spec: `docs/OBSERVER.md`.
 
-## Brands (any product, any niche)
-`brands/<name>/` holds BRAND.md (voice, pains, claims) + brand.json (colours, fonts, libraries). `reels/rf <brand> ...` and `carousel/cf <brand> ...` run the engines in `workspaces/<brand>/` (git-ignored, holds clips, songs, art, outputs). New product: `/brand`. Then `/reel`, `/carousel`. Never post anything: the owner posts.
+## The data home and brand isolation (one folder, many products)
+The engine repo holds no user data. Everything of the user's lives in ONE data home (`python3 ledger/home.py data`; set by `/setup`, default `~/VideoHouse`): `house.json` (goals, autonomy, cleanup policy) · `brands/<product>/` (BRAND, CONTEXT, STRATEGY, workflow.json, refs.json, prompts/) · `workspaces/<product>/` (clips, songs, art, jobs, outputs) · `library/` (reusable, harvested) · `ledger/` (runs, capabilities) · `archive/`.
+**Each product is isolated.** Its tone, prompts, context, strategy and linked repos/folders (`refs.json`, read-only unless marked write) are used only for that product. `python3 ledger/home.py use <brand>` sets the active brand (`job.py new` does it too) and the guard hook blocks any read or write of another product's files or repos. Role briefs list only the active brand's files. New product: `/setup add-product <name>` or `/brand`. Never post anything: the owner posts.
+
+## Keeping it small
+`python3 ledger/clean.py report|run|harvest|schedule`: dry-run by default; `--apply-safe` deletes only rebuildable scratch (plates, frames, tmp) and archives old finished jobs (verified tar, restorable). Clips, songs, finals, brands, library, ledger and linked repos are never touched automatically. Reusable parts of approved jobs go to `library/` (`harvest`).
+
+## Setup and runtimes
+`SETUP.md` / `/setup` (Claude Code) / `$setup` (Codex): installs requirements, asks goals and products with choices, links repos, sets autonomy and cleanup. Claude Code is the source of truth (`.claude/`); `python3 adapters/codex.py` generates `AGENTS.md`, `.codex/` and `.agents/skills/` for Codex (CI checks they are in sync).
 
 ## Standing rules
 - Nothing is shown before the ship gates pass (A/V sync, no still hold >= 0.4 s, no black frames, -16..-13 LUFS, peak <= -1 dB). Gates do not see a wrong climax: read the frame sheet after every render.
