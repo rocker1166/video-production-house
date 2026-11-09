@@ -1,0 +1,9 @@
+# Video Production House
+> An agent-operated video studio. This repo is written for AI agents (Claude Code, Codex): humans configure it by talking to their agent.
+
+- AGENTS.md: the operating rules for any agent working in this repo (generated from CLAUDE.md)
+- SETUP.md: the guided first run an agent performs with the user
+- CONTRIBUTING.md: the machine-followable protocol for sending improvements back (fork, gate, draft PR) and how agents review them
+- .claude/skills/, .claude/agents/: the skills and the role agents (source of truth); .agents/ and .codex/ are generated for Codex
+- .github/review-policy.json: which pull requests agents may merge alone
+- ledger/contribute.py, ledger/triage.py: the contribution gate and the maintainer triage tool (use `--json`)

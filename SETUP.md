@@ -13,7 +13,7 @@ Works in **Claude Code** (`/setup`) and **Codex** (`$setup`, or "follow SETUP.md
 Everyone customises their own copy and the shared project improves through pull requests, not by editing it directly.
 - If you cloned `rocker1166/video-production-house` directly: `gh repo fork rocker1166/video-production-house --clone=false`, then point this folder at it: `git remote rename origin upstream && git remote add origin https://github.com/<you>/video-production-house.git` (or fork first and clone the fork). Result: `origin` = your fork, `upstream` = the shared repo.
 - Keep your changes on your fork's `main` or branches: customised skills, prompts for your workflow, extra roles. **Your products, assets and data are not in the repo at all** (they live in the data home, step 2), so nothing private can end up in the fork either.
-- Stay current: `git fetch upstream && git merge upstream/main` (or rebase) when the user agrees.
+- Stay current with the `update-upstream` skill (`/update`): it scans upstream's changes for hidden or widening instructions and new code execution, has the security reviewer look at sensitive files, and only then merges. Choose `ask` (recommended) or `auto` for `update` in `house.json`.
 - Record it: `python3 ledger/init.py merge '{"fork":"<you>/video-production-house"}'`.
 
 ## 2. Choose where everything lives (ONE folder for all products)

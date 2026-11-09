@@ -1,0 +1,9 @@
+{
+  "_doc": "Agent-run review. low = docs and examples. high = anything that EXECUTES or GUARDS (code, hooks, settings, CI, installer, adapters) . medium = instructions and content (skills, agents, styles, effects, templates). Edit auto_merge to change how much agents may merge alone.",
+  "low": ["docs/", "brands/example-", "README.md", "ledger/LEARNINGS.md", "ledger/runs.example.jsonl"],
+  "high": [".github/", "hooks/", ".claude/settings.json", ".codex/hooks.json", ".codex/config.toml", "install.sh", "adapters/", "ledger/", "engine/", "reels/bin/", "carousel/", "requirements", ".gitignore"],
+  "code_extensions": [".py", ".cjs", ".mjs", ".js", ".sh", ".swift", ".toml", ".json", ".html"],
+  "auto_merge": ["low", "medium"],
+  "approvals_required": 2,
+  "max_added_lines": { "low": 400, "medium": 250, "high": 150 }
+}

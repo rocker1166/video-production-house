@@ -13,4 +13,4 @@ Review in this order and quote file:line for each finding:
 4. **Proof:** is there a check that fails without the change (a selftest, gate or example)? Run `python3 ledger/contribute.py check --base upstream/main` and the selftests; paste results. No proof for new logic is a major issue.
 5. **Fit:** one purpose, small diff, follows existing structure, `.claude/` is the source and `python3 adapters/codex.py --check` passes, docs updated where behaviour changed.
 6. **Evidence:** does the PR say why (a failing run, a verdict, a measured number), anonymised? Claims without evidence are `unverified`.
-Output: `[blocker|major|minor] file:line problem -> fix`, max 12, then `VERDICT: APPROVE | CHANGES | REJECT` and a one-line reason. Problems only; no praise.
+Output: `[blocker|major|minor] file:line problem -> fix`, max 12, then two lines exactly: `REVIEWED: <head sha from your brief>` and `VERDICT: APPROVE | CHANGES | REJECT`, then a one-line reason. Problems only; no praise. You review quality and fit; the `security-reviewer` independently reviews safety: do not assume it caught what you skipped.
