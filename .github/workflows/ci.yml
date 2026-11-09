@@ -33,6 +33,7 @@ jobs:
           print('agents ok')
           PY
       - name: carousel render smoke test (real browser, any OS)
+        env: { BROWSER_NO_SANDBOX: "1" }
         run: |
           mkdir -p /tmp/h && export CAROUSEL_HOME=/tmp/h && mkdir -p /tmp/h/specs /tmp/h/art/t
           ffmpeg -loglevel error -y -f lavfi -i color=c=0xE8C99B:s=1080x1350 -frames:v 1 /tmp/h/art/t/a-a.png

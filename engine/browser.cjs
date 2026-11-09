@@ -7,6 +7,7 @@ const PW = path.join(os.homedir(), '.cache', 'reeltools', 'node_modules', 'playw
 const chromium = () => require(PW).chromium;
 
 async function launch(opts = {}) {
+  if (process.env.BROWSER_NO_SANDBOX || (process.platform === 'linux' && process.getuid && process.getuid() === 0)) opts = { ...opts, args: ['--no-sandbox', '--disable-dev-shm-usage', ...(opts.args || [])] };
   const tried = [];
   for (const channel of [process.env.BROWSER_CHANNEL, 'msedge', 'chrome', null].filter((c) => c !== undefined)) {
     try { return await chromium().launch(channel ? { channel, ...opts } : opts); }

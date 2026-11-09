@@ -16,6 +16,8 @@ const D = process.env.CAROUSEL_HOME ? resolve(process.env.CAROUSEL_HOME) : H; //
 const EDGE = createRequire(import.meta.url)("../engine/browser.cjs").binary(); // Edge / Chrome / Chromium on any OS
 const GEN = `${H}/gen.mjs`;
 const REF = "anchor.png"; // optional style anchor image in <data>/art/ (the approved look); styles with "useRef" use it when present
+// CI and root containers cannot run Chrome's sandbox: set BROWSER_NO_SANDBOX=1 (done automatically for root on Linux)
+const NOSB = process.env.BROWSER_NO_SANDBOX || (process.platform === "linux" && process.getuid?.() === 0) ? ["--no-sandbox", "--disable-dev-shm-usage"] : [];
 const [cmd, slug, ...rest] = process.argv.slice(2);
 const flag = (k) => (rest.includes(k) ? rest[rest.indexOf(k) + 1] : null);
 const only = flag("--only")?.split(",") ?? null;
@@ -58,13 +60,13 @@ if (cmd === "jobs") {
   mkdirSync(out, { recursive: true });
   full.slides.forEach((_, i) => {
     const n = String(i + 1).padStart(2, "0");
-    execFileSync(EDGE, ["--headless=new", "--disable-gpu", "--allow-file-access-from-files", "--hide-scrollbars", "--window-size=1080,1350", "--virtual-time-budget=3500", `--screenshot=${out}/slide-${n}.png`, `file://${H}/slide.html?s=${i + 1}#${hash}`], { stdio: "ignore" });
+    execFileSync(EDGE, [...NOSB, "--headless=new", "--disable-gpu", "--allow-file-access-from-files", "--hide-scrollbars", "--window-size=1080,1350", "--virtual-time-budget=3500", `--screenshot=${out}/slide-${n}.png`, `file://${H}/slide.html?s=${i + 1}#${hash}`], { stdio: "ignore" });
   });
   if (cmd === "pdf") {
     mkdirSync(`${D}/pdf`, { recursive: true });
     const imgs = full.slides.map((_, i) => `<img src="../out/${tag}/slide-${String(i + 1).padStart(2, "0")}.png">`).join("");
     writeFileSync(`${D}/pdf/_${tag}.html`, `<!doctype html><meta charset="utf-8"><style>@page{size:1080px 1350px;margin:0}*{margin:0}body{width:1080px}img{display:block;width:1080px;height:1350px;page-break-after:always}</style>${imgs}`);
-    execFileSync(EDGE, ["--headless=new", "--disable-gpu", "--allow-file-access-from-files", "--no-pdf-header-footer", `--print-to-pdf=${D}/pdf/${tag}.pdf`, `file://${D}/pdf/_${tag}.html`], { stdio: "ignore" });
+    execFileSync(EDGE, [...NOSB, "--headless=new", "--disable-gpu", "--allow-file-access-from-files", "--no-pdf-header-footer", `--print-to-pdf=${D}/pdf/${tag}.pdf`, `file://${D}/pdf/_${tag}.html`], { stdio: "ignore" });
   }
   console.log(`rendered ${full.slides.length} slides -> out/${tag}/` + (cmd === "pdf" ? `, pdf/${tag}.pdf` : ""));
 } else console.error("usage: node kc.mjs <jobs|gen|sheet|render|pdf> <slug> [--only key,key]");
