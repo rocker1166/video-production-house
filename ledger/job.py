@@ -6,7 +6,8 @@ and lets the crew grow: roles live in ledger/roles.json, and the producer can ad
                                                    type: takes crew + success metrics from brands/<brand>/workflow.json
   job.py status <job>                              phase, crew, artifacts present/missing, QC loops used
   job.py gate <job> <intake|develop|prep|build|qc|post>   exit 1 and list what is missing
-  job.py qc-loop <job>                             count one QC round; exit 2 after 3: escalate to the human
+  job.py qc-loop <job>                             count one fix round after a REVISE; exit 2 when they are used up: escalate to the human
+                                                   (3 fix rounds by default; the owner sets limits.qc_fix_rounds in house.json)
   job.py faults <job>                              {role: n} from `owner:` tags in review-*.md
   -- adaptive crew --
   job.py roles                                     every known role: builtin, custom, and the unbuilt catalogue (docs/ROLES.md)
@@ -52,7 +53,7 @@ TODO (copy from brands/{brand}/BRAND.md and add job-specific ones)
 - TODO
 
 ## Constraints
-Approver: the user · Human revision rounds: 2 · Internal QC loops: max 3 · Budget (money/time): TODO
+Approver: the user · Human revision rounds: 2 · Internal QC fix rounds: max {qc} · Budget (money/time): TODO
 
 ## Inputs given (files, links, references)
 TODO
@@ -111,7 +112,7 @@ def new(brand, slug, crew="standard"):
     os.makedirs(os.path.join(d, "out"), exist_ok=True)
     os.makedirs(os.path.join(d, "assets"), exist_ok=True)
     ts = time.strftime("%Y-%m-%d")
-    brief = BRIEF.format(slug=slug, brand=brand, crew=crew if crew in CREWS else "custom", ts=ts)
+    brief = BRIEF.format(slug=slug, brand=brand, crew=crew if crew in CREWS else "custom", ts=ts, qc=fix_rounds())
     bd = _home.brand_dir(brand)
     files = [f for f in ("BRAND.md", "CONTEXT.md", "STRATEGY.md", "workflow.json") if os.path.isfile(os.path.join(bd, f))]
     brief += "\n## Brand files (read these; they are the ONLY brand material you may use)\n" + "".join(f"- {os.path.join(bd, f)}\n" for f in files)
@@ -170,21 +171,31 @@ def gate(d, phase):
 
 def status(d):
     j = load(d)
-    print(f"{j['brand']}/{j['slug']} crew={j['crew']} qc_loops={j['qc_loops']}/3")
+    print(f"{j['brand']}/{j['slug']} crew={j['crew']} qc_fix_rounds={j['qc_loops']}/{fix_rounds()}")
     for r in dict.fromkeys(crew(j)):
         i = roleinfo(j, r)
         tag = " (ad-hoc)" if r in j.get("adhoc", {}) else ""
         print(f"  {'ok ' if real(os.path.join(d, i['artifact'])) else '-- '}{r:<16}{i['phase']:<8}{i['artifact']}{tag}")
 
 
+def fix_rounds():
+    """QC fix rounds before the human is asked: 3 by default (review, fix, review ... up to four reviews). The owner can set
+    limits.qc_fix_rounds in house.json; 1 means review, fix, review again, for a house that would rather be asked sooner."""
+    try:
+        return max(0, int(json.load(open(os.path.join(_home.data(), "house.json")))["limits"]["qc_fix_rounds"]))
+    except Exception:
+        return 3
+
+
 def qc_loop(d):
     j = load(d)
+    n = fix_rounds()
     j["qc_loops"] += 1
     save(d, j)
-    if j["qc_loops"] > 3:
-        print("QC loop limit (3) reached: stop fixing, show the user what is left and ask.")
+    if j["qc_loops"] > n:
+        print(f"QC fix rounds used up ({n}): stop fixing, show the user the best version and what is left, and ask.")
         return 2
-    print(f"qc loop {j['qc_loops']}/3")
+    print(f"qc fix round {j['qc_loops']}/{n}")
     return 0
 
 
@@ -280,6 +291,12 @@ def selftest():
     for _ in range(3):
         assert qc_loop(d) == 0
     assert qc_loop(d) == 2, "4th loop must escalate"
+    json.dump({"limits": {"qc_fix_rounds": 1}}, open(os.path.join(HOME, "house.json"), "w"))  # the owner's limit wins
+    new("b", "q", "solo")
+    q = os.path.join(HOME, "workspaces", "b", "jobs", "q")
+    assert "fix rounds: max 1" in open(os.path.join(q, "brief.md")).read(), "the brief states the owner's limit"
+    assert qc_loop(q) == 0 and qc_loop(q) == 2, "with limits.qc_fix_rounds 1 the second fix round escalates"
+    os.remove(os.path.join(HOME, "house.json"))
     open(os.path.join(d, "review-picture.md"), "w").write("[minor] [t=2s] nit -> fix | owner: scriptwriter\nPASS\n")
     assert gate(d, "qc") == 0
     # adaptive crew: add a registered role, invent one, gate on it, promote it

@@ -84,6 +84,7 @@ Everything secret lives in `.env` (git-ignored; copy from `.env.example`). All k
 | `GEMINI_API_KEY` | carousel picture generation (about $0.13 per image) | use your own photos with `"photo"` in the slide spec |
 | `BROWSER` | path to Edge/Chrome/Chromium if auto-detection misses it | detected automatically |
 | `BROWSER_CHANNEL` | Playwright channel to try first (`msedge`, `chrome`) | tries msedge, chrome, then bundled chromium |
+| `BROWSER_GPU` | `0`: no renderer draws on the GPU. `1`: every renderer does | page films (`engine/film.cjs`) draw on the GPU on Linux when a render node exists (not root, not CI); everything else draws in software |
 
 Optional extras: the `earshot` skill needs its Python package (see `.claude/skills/earshot/SKILL.md`) to *listen* to audio; the `vidcap` MCP adds captions.
 

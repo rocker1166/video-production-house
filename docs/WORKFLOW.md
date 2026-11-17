@@ -20,7 +20,7 @@ The house runs as a **crew of role agents** under one producer (the main Claude 
 2. **Every role owns one file** (`brief.md` by the producer, `research.md` by the researcher...). An agent edits only its own file. This is the "own project page per agent" rule that stops corrections spreading to other roles.
 3. **Gates are files plus measurements,** checked by `ledger/job.py gate`, not by an agent's say-so.
 4. **QC is independent:** fresh context, sees the brief and the output, never the maker's reasoning. It reviews against the brief's success criteria, then the technical gates.
-5. **Fix loop capped at 3 iterations** (the CoAgent number); a failure after 3 goes to the human, not a fourth try. Human revision rounds default to 2.
+5. **Fix loop capped at 3 iterations** (the CoAgent number); a failure after 3 goes to the human, not a fourth try. The owner can lower the cap with `limits.qc_fix_rounds` in `house.json` (1 = review, fix, review again). Human revision rounds default to 2.
 6. **Over-generate shots, select ruthlessly** where footage is generated or stocked; budget about 3x.
 7. **The crew is adaptive, not fixed.** Presets (`solo`, `standard`, `full`) are only starting points: the producer drops roles that have no work and adds roles the job needs (a colorist, a localizer, a compliance reviewer...), inventing one on the spot when none exists, and promotes it to a permanent agent once a second job needs it. Every change is logged in the brief with its reason. See `docs/ROLES.md`. This matches how real productions hire per project rather than keeping one fixed crew.
 
@@ -36,14 +36,14 @@ The house runs as a **crew of role agents** under one producer (the main Claude 
 | 1e | **Greenlight** | producer | decision recorded in `brief.md` | `propose` style: show the user; `auto` style: proceed |
 | 2a | Assets | `asset-wrangler` | `assets.md` manifest + files: clips, songs, SFX, logos, screens, each with licence and path | every shot has a source file; licences recorded |
 | 2b | Sound plan | `sound-designer` | `sound.md`: music pick and hit points, SFX cue list, VO plan | cues map to shots |
-| 3 | Build | `cinematographer` (camera and shot craft) then `editor` (assembly) | `plan.json` / spec, `out/*.mp4` draft | engine builds without error |
+| 3 | Build | `cinematographer` (camera and shot craft) then `editor` (assembly). Page films: lead editor's framework, then one cinematographer and one editor per act group in parallel, all rendering through `engine/film.cjs` | `plan.json` / spec, `out/*.mp4` draft | engine builds without error; a page film shows one picture per time (`film.cjs pure`) |
 | 4 | Mix and gates | `sound-designer`, `editor` | master + `gates.txt` from `build.py check` | all mechanical gates PASS |
-| 5 | **QC** | `qc-picture`, `qc-audio` in parallel | `review.md`: ranked issues, timestamp, owner role, fix, scorecard vs success criteria | no `blocker`; max 3 loops, then escalate |
+| 5 | **QC** | `qc-picture`, `qc-audio` in parallel | `review.md`: ranked issues, timestamp, owner role, fix, scorecard vs success criteria | no `blocker`; max 3 fix rounds by default (`limits.qc_fix_rounds`), then escalate |
 | 6 | Delivery | producer | mp4 + thumbnail + caption + table, run logged | user sees only what passed QC; user's reply = verdict |
 | 7 | **Post-mortem** | `toolsmith` | `postmortem.md` + patches | see section 5 |
 
 ## 4. Loop one: make the video better (QC)
-`build -> qc-picture + qc-audio (fresh eyes) -> review.md -> owner roles fix their own artifact -> rebuild only what changed -> QC again`, at most 3 times (`job.py qc-loop`). Issues carry an `owner:` so the fix goes to the role that caused it, and the ledger counts faults per role.
+`build -> qc-picture + qc-audio (fresh eyes) -> review.md -> owner roles fix their own artifact -> rebuild only what changed -> QC again`, at most 3 times by default (`job.py qc-loop`; the owner's `limits.qc_fix_rounds` wins). Issues carry an `owner:` so the fix goes to the role that caused it, and the ledger counts faults per role.
 
 ## 5. Loop two: make the tool better (toolsmith)
 After every delivered job the `toolsmith` reads `review.md`, the gate log and the user's verdict, and classifies each fault:
@@ -60,5 +60,8 @@ After every delivered job the `toolsmith` reads `review.md`, the gate log and th
 Guardrails: patches are small, each carries a check (selftest, gate or example), `python3 ledger/house.py selftest` and syntax checks must pass, and changes to `engine/` or agent prompts are listed for the user's OK unless the style is on `auto` and the change is a doc or rule. The toolsmith never edits the ledger's recorded runs and never lowers a gate to make a video pass.
 Roles with repeated faults show up in `house.py score`; that is the signal to rewrite their prompt.
 
-## 6. Limits
+## 6. Where the time goes (measure it, do not guess)
+Measure a job from its session transcripts (tool call to tool result times, per agent), never from render logs. On the one 3-minute page film measured so far the render logs suggested 5% machine time and the transcripts showed 37%. That job took 5 h 33 min: pre-production 60 min, build to the first master 156 min, QC with three reviews 117 min. Each editor had written its own renderer, the second editor started 76 minutes after the first, the camera spec arrived in three parts, and two editors rendered at once while the browser drew in software. `engine/film.cjs`, `engine/film-template/` and the page-film steps in the playbook answer those points. Whether they bring such a job near 3 hours has not been measured yet: one film on one laptop is the whole evidence.
+
+## 7. Limits
 Agents cannot hear or see on their own: sound claims need `earshot` numbers, picture claims need frames read at full size. Cost grows with context length times steps, so briefs to agents are short, outputs are failures-only, and the default is at most 6-8 agents in parallel.

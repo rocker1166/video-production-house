@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>film</title>
+<style>
+  html, body { margin: 0; background: #111; }
+  #stage { position: relative; overflow: hidden; background: #F2F2F2; transform-origin: 0 0; }
+  .act { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: none; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+/* House film page: copy this folder to <job>/film/ and build on it. Rendered by engine/film.cjs (read its header for the commands).
+   The contract:
+     window.seek(t)     draws the film at t seconds. Everything on screen is a function of t: no wall clock, no unseeded random,
+                        no self-running CSS transition or animation.
+     window.__ready     resolves when fonts, images and acts are built; window.__error holds the message when the page cannot build.
+     window.filmInfo()  { fps, width, height, total, acts: [{ id, from, to }] }
+     ?export=1          sent by the renderer: no preview playback. ?acts=a1,a2 loads only those acts (fast samples of one act).
+   One act = one file in acts/<id>.js. Editors work on different act files at the same time, and after a fix only the changed
+   act is rendered again. Shared things (palette, fonts, a character rig) go in lib/ and are loaded here with <script> tags:
+   a change to a shared file re-renders the whole film, so settle them before the acts are built. */
+(function () {
+  const Film = window.Film = {
+    fps: 30, width: 1080, height: 1920,
+    // The one shared table, written once from the shot list or the voice timing. Windows may overlap for a transition; later rows draw on top.
+    table: [
+      { id: 'a1', from: 0, to: 2 },
+      { id: 'a2', from: 2, to: 4 },
+    ],
+    acts: {}, pending: [],
+    // An act registers itself: build(root, row) makes its DOM once; seek(u, t) draws it at u seconds after its start (t = film time).
+    act(id, def) { Film.acts[id] = def; },
+    // Anything slow at build time (an image to decode, a texture to bake) hands its promise here so __ready waits for it.
+    wait(promise) { Film.pending.push(promise); },
+  };
+  const stage = document.getElementById('stage');
+  stage.style.width = Film.width + 'px'; stage.style.height = Film.height + 'px';
+  const q = new URLSearchParams(location.search), only = (q.get('acts') || '').split(',').filter(Boolean);
+  const rows = Film.table.filter((a) => !only.length || only.includes(a.id));
+  let ready; window.__ready = new Promise((r) => (ready = r));
+
+  window.seek = async (t) => {
+    await window.__ready;
+    for (const a of rows) {
+      const on = t >= a.from && t < a.to;          // shown or hidden by the clock alone, never by what was on screen before
+      a.root.style.display = on ? 'block' : 'none';
+      if (on) Film.acts[a.id].seek(t - a.from, t);
+    }
+  };
+  window.filmInfo = () => ({
+    fps: Film.fps, width: Film.width, height: Film.height, total: Math.max(...Film.table.map((a) => a.to)),
+    acts: Film.table.map(({ id, from, to }) => ({ id, from, to })),
+  });
+
+  (async () => {
+    for (const a of rows) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'acts/' + a.id + '.js'; s.onload = res; s.onerror = () => rej(new Error('act not found: acts/' + a.id + '.js')); document.head.appendChild(s); });
+    // Fonts first: acts measure text when they build. Name every face the film uses, for example:
+    //   await document.fonts.load('700 40px "Inter"', 'abc');
+    await document.fonts.ready;
+    for (const a of rows) {
+      if (!Film.acts[a.id]) throw new Error('acts/' + a.id + '.js did not call Film.act("' + a.id + '", ...)');
+      a.root = document.createElement('div'); a.root.className = 'act'; a.root.id = 'act-' + a.id; stage.appendChild(a.root);
+      Film.acts[a.id].build(a.root, a);
+    }
+    await Promise.all(Film.pending); await document.fonts.ready;
+    ready(true);
+    if (!q.get('export')) {                         // opened by hand in a browser: fit the window and play in a loop
+      stage.style.transform = 'scale(' + Math.min(innerWidth / Film.width, innerHeight / Film.height) + ')';
+      const t0 = performance.now(), total = window.filmInfo().total;
+      (function loop() { window.seek(((performance.now() - t0) / 1000) % total); requestAnimationFrame(loop); })();
+    }
+  })().catch((e) => { console.error(e); window.__error = String((e && e.message) || e); });
+})();
+</script>
+</body>
+</html>

@@ -35,16 +35,26 @@ Gate: `job.py gate <job> develop`.
 Write the decision in `brief.md` under Decisions. Check `python3 ledger/house.py score`: style on `propose` -> show the user the hook, the shot list and the sound idea (short) and wait; style on `auto` -> continue and report at delivery. A new niche or a style with fewer than 3 verdicts is always `propose`.
 
 ## 3. Pre-production
-**asset-wrangler** and **sound-designer** in parallel (sound plan needs only the shot list). Gate: `job.py gate <job> prep`. Anything marked `unverified` licence or missing source -> change the shot or ask; never ship it.
+**asset-wrangler** and **sound-designer** in parallel (sound plan needs only the shot list). On a **page film** (section 4) the cinematographer(s) and the lead editor's framework step go out in that same message, on one condition: the film's clock exists. A voiced film takes its clock from the voice, so have the voice and its timing file made first (from `script.md`); every act time and camera cue is read from it. A film cut to music takes its clock from the hit points in `sound.md`, so there camera and framework wait for the sound plan. Gate: `job.py gate <job> prep`. Anything marked `unverified` licence or missing source -> change the shot or ask; never ship it.
 
 ## 4. Build
-**cinematographer** then **editor** (one pair per scene group on a large job, max 6-8 agents at once). The editor runs the engine and pastes the gate output (`build.py check`) into `edit-log.md`. **sound-designer** mixes and measures. Gate: `job.py gate <job> build` (needs a render and PASS in the edit log).
+**Footage edits, reels, carousels:** **cinematographer** then **editor** (one pair per scene group on a large job, max 6-8 agents at once). The editor runs the engine and pastes the gate output (`build.py check`) into `edit-log.md`. **sound-designer** mixes and measures.
+
+**Page films** (one HTML page with a clock, for example style `html-teaser`) are built by act, in parallel, with the shared renderer `engine/film.cjs`. Nobody writes a renderer, an encode script or a gate script. The commands are in the header of that file.
+1. **Framework** (lead editor; 30 minute box). Copy `engine/film-template/` to `<job>/film/`. Write the act table (id, from, to) from the storyboard's act table and the film's clock. Everything two acts share (palette, fonts, a character rig, captions) goes in `film/lib/`. Done when `film.cjs info` and `film.cjs pure` pass. Shared files are settled here: a later change to one re-renders the whole film.
+2. **Camera** (one cinematographer per act group, alongside step 1). The first group's cinematographer owns `camera.md`: its own group's spec, then one line per sibling file. The others write `camera-<group>.md`. Each delivers its whole group in one pass.
+3. **Acts** (one editor per act group: about one per minute of film, at most 3; a film under 45 s is built by the lead alone). Dispatch them together, as soon as the framework passes and their group's camera spec exists. Each writes only `film/acts/<id>.js` for its own acts and its own `edit-log-<group>.md`, and asks you for a shared-file change instead of making it. One check = ONE `film.cjs stills --at t1,t2,... --sheet` call.
+4. **Assembly** (lead editor). `film.cjs draft` makes the QC cut (after a fix it renders only the changed acts). After QC passes, `film.cjs final ... --audio <mix>` makes the master and its full gate output goes into `edit-log.md`. QC saw the draft cut, not the master: look at the master itself before delivery (frames taken from the mp4 at the hook, the climax, the end and every time QC flagged).
+The tool runs one render at a time per user and makes the others wait, so parallel editors cannot overload the machine. Give a Bash call that renders a whole film a 10 minute timeout.
+
+Gate: `job.py gate <job> build` (needs a render and PASS in the edit log).
 
 ## 5. QC loop (the part most crews skip)
+A QC review costs about 15 minutes plus the fixes, and the fix rounds are capped. Before the first one, check the cut yourself against the brief's success criteria on a frame sheet (hook, each act's key beat, climax, end card) and send obvious faults back: do not spend a review on them.
 Run `qc-picture` and `qc-audio` in parallel, each given only the job path and its role: **no maker reasoning, fresh eyes**. Then:
 1. Read `review-*.md`. **Verify the top 3 claims on the frames or measurements yourself** before acting; a reviewer is sometimes wrong (it misjudged font sizes off a small sheet once).
-2. `python3 ledger/job.py gate <job> qc`. If REVISE: `job.py qc-loop <job>`, send each issue to its `owner:` role to fix **its own artifact**, the editor re-renders only what changed, then QC again. Do not send "fix everything" to one agent.
-3. Exit code 2 from `qc-loop` (3 rounds used): stop. Show the user the best version, the open issues, and ask. Never take a fourth silent try.
+2. `python3 ledger/job.py gate <job> qc`. If REVISE: `job.py qc-loop <job>`, send every issue to its `owner:` role in one message (owners fix in parallel, each **its own artifact**), the editor re-renders only what changed, then QC again. Do not send "fix everything" to one agent.
+3. Exit code 2 from `qc-loop` (the fix rounds are used up: 3 by default, `limits.qc_fix_rounds` in `house.json`): stop. Show the user the best version, the open issues, and ask. Never take another silent try.
 Mechanical gates and measured numbers beat reviewer opinion; reviewer opinion beats yours on taste you cannot see.
 
 ## 6. Delivery

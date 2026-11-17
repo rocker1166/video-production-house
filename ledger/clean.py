@@ -7,7 +7,7 @@
   clean.py schedule [--install]      print the weekly cron line (or add it: persistent config, so only when the user asked)
   clean.py selftest
 Classes (policy in <data>/house.json "cleanup", defaults below):
-  regenerable  directories the engine rebuilds: plates/, frames/, tmp/, qc_zoom/, *-stills/, __pycache__/  -> deleted after `regen_days`
+  regenerable  directories the engine rebuilds: plates/, frames/, frames-draft/, stills/, tmp/, qc_zoom/, *-stills/, __pycache__/  -> deleted after `regen_days`
   archive      a finished job folder untouched for `archive_days` -> <data>/archive/<brand>/<slug>.tar.gz, original removed ONLY after the
                archive is verified; briefs, scripts, reviews and postmortems are kept inside it. Restorable.
   report-only  everything else (clips, songs, finals, brands, library, ledger). Never touched here; a human decides.
@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import home as H
 
 DEFAULT = {"regen_days": 14, "archive_days": 45, "max_gb": 20}
-REGEN = ("plates", "frames", "tmp", "qc_zoom", "__pycache__")
+REGEN = ("plates", "frames", "frames-draft", "stills", "tmp", "qc_zoom", "__pycache__")
 DAY = 86400
 
 
